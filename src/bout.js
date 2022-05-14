@@ -14,6 +14,7 @@ export default class Bout extends Phaser.Scene {
     preload ()
     {
         this.load.json('graveyard', 'assets/map/graveyard.json');
+        this.load.tilemapTiledJSON('graveyardTileMap', 'assets/map/graveyard.json');
         this.load.spritesheet('tiles', 'assets/map/iso-64x64-outside.png', {frameWidth: 64, frameHeight: 64});
 
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
@@ -192,6 +193,8 @@ export default class Bout extends Phaser.Scene {
     buildMap(){
       var scene = this
       const data = scene.cache.json.get('graveyard');
+      var map = this.add.tilemap('graveyard');
+      console.log(map);
 
 
       const tilewidth = data.tilewidth;

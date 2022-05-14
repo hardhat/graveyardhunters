@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.4" orientation="isometric" renderorder="right-down" width="32" height="32" tilewidth="64" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="2">
- <tileset firstgid="1" source="base.tsx"/>
+ <editorsettings>
+  <export target="graveyard.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="base" tilewidth="64" tileheight="64" tilecount="160" columns="10">
+  <image source="iso-64x64-outside.png" width="640" height="1024"/>
+ </tileset>
  <layer id="1" name="ground" width="32" height="32">
   <data encoding="csv">
 11,17,17,4,11,6,17,7,4,6,12,115,115,115,115,116,6,4,3,13,14,14,7,6,17,5,4,17,5,7,12,3,

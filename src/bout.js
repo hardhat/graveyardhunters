@@ -133,7 +133,7 @@ export default class Bout extends Phaser.Scene {
         //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
-		
+
         var health=30;
 
 		var x=this.centerX + 200;
@@ -147,13 +147,27 @@ export default class Bout extends Phaser.Scene {
 		console.log("200, 400 -> "+x+","+y+" -> iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
 
 		this.playerSprite = this.add.sprite(x,y);
-		
-		
+
+
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
+
+        var x=200;
+        var y=400;
+
+        //x =
+
+        var health=30;
+
+		/*
+			var x=16+(k/5)*10;
+			var y=16+(k%5)*10;
+			const tx = (x-y) * this.tileWidthHalf;
+			const ty = (x+y) * this.tileHeightHalf;
+		*/
 
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
 		/*
@@ -179,6 +193,7 @@ export default class Bout extends Phaser.Scene {
       var scene = this
       const data = scene.cache.json.get('graveyard');
 
+
       const tilewidth = data.tilewidth;
       const tileheight = data.tileheight;
 
@@ -188,8 +203,6 @@ export default class Bout extends Phaser.Scene {
 	  this.tileWidthHalf = tileWidthHalf;
 	  this.tileHeightHalf = tileHeightHalf;
 
-      console.log("Tile half size: "+tileWidthHalf+","+tileHeightHalf);
-	  
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
         if(data.layers[j].type == "objectgroup"){

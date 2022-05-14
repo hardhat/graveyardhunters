@@ -43,7 +43,7 @@ export default class Player extends Actor {
         this.scene.showSyllable('do',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "1";
-        this.scene.syllable1.play();
+        /*this.scene.syllable1.play();*/
         this.updatePatternHint();
     }
 
@@ -51,7 +51,7 @@ export default class Player extends Actor {
         this.scene.showSyllable('wah',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "2";
-        this.scene.syllable2.play();
+        /*this.scene.syllable2.play();*/
         this.updatePatternHint();
     }
 
@@ -59,7 +59,7 @@ export default class Player extends Actor {
         this.scene.showSyllable('uhuh',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "3";
-        this.scene.syllable3.play();
+        /*this.scene.syllable3.play();*/
         this.updatePatternHint();
     }
 
@@ -67,7 +67,7 @@ export default class Player extends Actor {
         this.scene.showSyllable('katta',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "4";
-        this.scene.syllable4.play();
+        /*this.scene.syllable4.play();*/
         this.updatePatternHint();
     }
 

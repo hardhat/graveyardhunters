@@ -26,12 +26,12 @@ export default class Bout extends Phaser.Scene {
         this.load.image('healthbar', 'assets/hud/healthbar.png');
         this.load.image('hudBg', 'assets/hud/hud-bg.png');
 
-        this.load.audio('1', [ 'assets/syllables/DO_woman.wav', 'assets/syllables/DO_woman.mp3', 'assets/syllables/DO_woman.ogg' ]);
+        /*this.load.audio('1', [ 'assets/syllables/DO_woman.wav', 'assets/syllables/DO_woman.mp3', 'assets/syllables/DO_woman.ogg' ]);
         this.load.audio('2', [ 'assets/syllables/WAH_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);
         this.load.audio('3', [ 'assets/syllables/UHUH_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);
-        this.load.audio('4', [ 'assets/syllables/KATTA_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);
+        this.load.audio('4', [ 'assets/syllables/KATTA_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);*/
 
-        this.load.audio('woman1', [ 'assets/sfx/FIGHT_woman1.wav' ]);
+        /*this.load.audio('woman1', [ 'assets/sfx/FIGHT_woman1.wav' ]);
         this.load.audio('woman2', [ 'assets/sfx/FIGHT_woman2.wav' ]);
         this.load.audio('woman3', [ 'assets/sfx/FIGHT_woman3.wav' ]);
         this.load.audio('woman4', [ 'assets/sfx/FIGHT_woman4.wav' ]);
@@ -43,7 +43,7 @@ export default class Bout extends Phaser.Scene {
         this.load.audio('man4', [ 'assets/sfx/FIGHT_man4.wav' ]);
         this.load.audio('man5', [ 'assets/sfx/FIGHT_man5.wav' ]);
         this.load.audio('man6', [ 'assets/sfx/FIGHT_man6.wav' ]);
-        this.load.audio('manwin', [ 'assets/sfx/WIN_man.wav' ] );
+        this.load.audio('manwin', [ 'assets/sfx/WIN_man.wav' ] );*/
     }
 
     createAnim(texture)
@@ -137,7 +137,7 @@ export default class Bout extends Phaser.Scene {
         x=600;
         this.npc = new Npc({scene: this, sprite: this.npcSprite, x:x, y:y, health: health});
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
-        
+
         if(this.npc.alive){
           this.createAnim('candy');
           this.npcSprite = this.add.sprite(600,400);
@@ -145,7 +145,7 @@ export default class Bout extends Phaser.Scene {
           this.npcSprite.play('candyidle');
         }
 
-        this.createSounds();
+        /*this.createSounds();*/
         this.player.create();
         this.hud.create();
         this.npc.create();
@@ -162,7 +162,7 @@ export default class Bout extends Phaser.Scene {
             console.log("Quiet.");
             this.sound.stopAll();
         }, this);
-        
+
         this.womanFight = [];
         this.womanFight.push(this.sound.add('woman1'));
         this.womanFight.push(this.sound.add('woman2'));

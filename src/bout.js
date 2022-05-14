@@ -91,25 +91,60 @@ export default class Bout extends Phaser.Scene {
     {
         //scene = this;
         this.buildMap();
+        /*var velocityX = 0;
+        var velocityY = 0;*/
+        var camX = -440;
+        var camY = -460;
+        this.cameras.main.setSize(1600, 1200);
+        this.cameras.main.setPosition(camX, camY);
+        //var keyObj = this.input.keyboard.addKey('W');
+        const cursors = this.input.keyboard.createCursorKeys();
 
-        this.cameras.main.setSize(4000, 1600);
-        this.cameras.main.setPosition(-600, -300);
+        const controlConfig = {
+          camera: this.cameras.main,
+          left: cursors.left,
+          right: cursors.right,
+          up: cursors.up,
+          down: cursors.down,
+          zoomIn: this.input.keyboard.addKey('Q'),
+          zoomOut: this.input.keyboard.addKey('E'),
+          acceleration: 0.06,
+          drag: 0.0005,
+          maxSpeed: 1.0
+        };
+        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+        /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
+
+        keys.W.on('down', function(event) {velocityY = -1});
+        keys.W.on('up', function(event) {velocityY = 0});
+        keys.S.on('down', function(event) {velocityY = 1});
+        keys.S.on('up', function(event) {velocityY = 0});
+        keys.A.on('down', function(event) {velocityX = -1});
+        keys.A.on('up', function(event) {velocityX = 0});
+        keys.D.on('down', function(event) {velocityX = 1});
+        keys.D.on('up', function(event) {velocityX = 0});
+        camX = camX + velocityX;
+        camY = camY + velocityY;*/
+
+
+
         //this.cameras.main.setZoom();
         //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
-		
+
 		this.playerSprite = this.add.sprite(96,32);
-		
-		
+
+
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
 
-        x=200;
-        y=400;
+        var x=200;
+        var y=400;
         var health=30;
 
 		/*
@@ -138,6 +173,7 @@ export default class Bout extends Phaser.Scene {
         //this.hud.create();
         //this.npc.create();
     }
+
     buildMap(){
       var scene = this
       const data = scene.cache.json.get('graveyard');
@@ -147,12 +183,21 @@ export default class Bout extends Phaser.Scene {
 
       var tileWidthHalf = tilewidth / 2;
       var tileHeightHalf = tileheight / 2;
-	  
+
 	  this.tileWidthHalf = tileWidthHalf;
 	  this.tileHeightHalf = tileHeightHalf;
-	  
+
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
+        if(data.layers[j].type == "objectgroup"){
+          var spawnX = data.layers[j].objects[0].x;
+          var spawnY = data.layers[j].objects[0].y;
+          const object = data.layers[j].data;
+          console.log("it worked");
+          console.log(data.layers[j].objects[0].x);
+          console.log(data.layers[j].objects[0].y);
+          return {x: spawnX, y: spawnY};
+        }
         const layer = data.layers[j].data;
 
         const mapwidth = data.layers[j].width;
@@ -163,7 +208,7 @@ export default class Bout extends Phaser.Scene {
 
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
-		
+
 		this.centerX = centerX;
 		this.centerY = centerY;
 
@@ -236,6 +281,7 @@ export default class Bout extends Phaser.Scene {
 
     update ()
     {
+      this.controls.update();
       /*var d = 1;
       if(d){
         this.cameras.main.scrollX -= 0.5;

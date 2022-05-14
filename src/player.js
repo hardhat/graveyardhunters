@@ -19,7 +19,7 @@ export default class Player extends Actor {
       this.comboString = "";
       this.damage = 0;
       this.nextSfx = 0;
-      this.scene.input.keyboard.on('keydown-UP', this.doUp, this);
+      /*this.scene.input.keyboard.on('keydown-UP', this.doUp, this);
       this.scene.input.keyboard.on('keydown-DOWN', this.doDown, this);
       this.scene.input.keyboard.on('keydown-LEFT', this.doLeft, this);
       this.scene.input.keyboard.on('keydown-RIGHT', this.doRight, this);
@@ -33,42 +33,42 @@ export default class Player extends Actor {
           console.log(this.comboString);
           this.updatePatternHint();
         }
-      }, this);
+      }, this);*/
       this.enemy = this.scene.npc;
 
-      this.createPaternHint();
+      //this.createPaternHint();
     }
 
     doUp(event) {
-        this.scene.showSyllable('do',this.comboString.length);
+        /*this.scene.showSyllable('do',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "1";
         /*this.scene.syllable1.play();*/
-        this.updatePatternHint();
+        //this.updatePatternHint();//
     }
 
     doRight(event) {
-        this.scene.showSyllable('wah',this.comboString.length);
+        /*this.scene.showSyllable('wah',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "2";
         /*this.scene.syllable2.play();*/
-        this.updatePatternHint();
+        //this.updatePatternHint();
     }
 
     doDown(event) {
-        this.scene.showSyllable('uhuh',this.comboString.length);
+        /*this.scene.showSyllable('uhuh',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "3";
         /*this.scene.syllable3.play();*/
-        this.updatePatternHint();
+        //this.updatePatternHint();
     }
 
     doLeft(event) {
-        this.scene.showSyllable('katta',this.comboString.length);
+        /*this.scene.showSyllable('katta',this.comboString.length);
         this.comboCount += 1;
         this.comboString += "4";
         /*this.scene.syllable4.play();*/
-        this.updatePatternHint();
+        //this.updatePatternHint();
     }
 
     dealDamage(amount)
@@ -192,7 +192,7 @@ export default class Player extends Actor {
 
     patternCheck()
     {
-        this.patterns = ["1112","1212","2121","2221","3334","2424","4434"];
+        /*this.patterns = ["1112","1212","2121","2221","3334","2424","4434"];
         if(this.comboString == this.patterns[0]){
             this.patternAdvance();
         } else if(this.comboString == this.patterns[1]){
@@ -210,19 +210,19 @@ export default class Player extends Actor {
         } else {
           console.log('invalid input');
           this.sprite.play('stewieidle');
-        }
+        }*/
     }
 
     update ()
     {
 
-      if(this.comboCount == 4){
+      /*if(this.comboCount == 4){
         this.patternCheck();
         console.log(this.comboString);
         this.comboCount = 0;
         this.comboString = "";
         this.updatePatternHint();
-      }
+      }*/
     }
 
     createPaternHint()

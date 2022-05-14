@@ -147,9 +147,12 @@ export default class Bout extends Phaser.Scene {
 
         var x=200;
         var y=400;
+<<<<<<< HEAD
 
         //x =
 
+=======
+>>>>>>> parent of 3d340ca (Initial co-ord conversion for player.)
         var health=30;
 
 		/*

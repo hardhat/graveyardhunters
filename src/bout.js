@@ -98,16 +98,26 @@ export default class Bout extends Phaser.Scene {
         //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
-        this.playerSprite = this.add.sprite(360+116,360+76);
+		
+		this.playerSprite = this.add.sprite(96,32);
+		
+		
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
 
-        var x=200;
-        var y=400;
+        x=200;
+        y=400;
         var health=30;
+
+		/*
+			var x=16+(k/5)*10;
+			var y=16+(k%5)*10;
+			const tx = (x-y) * this.tileWidthHalf;
+			const ty = (x+y) * this.tileHeightHalf;
+		*/
 
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
 		/*
@@ -137,6 +147,10 @@ export default class Bout extends Phaser.Scene {
 
       var tileWidthHalf = tilewidth / 2;
       var tileHeightHalf = tileheight / 2;
+	  
+	  this.tileWidthHalf = tileWidthHalf;
+	  this.tileHeightHalf = tileHeightHalf;
+	  
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
         const layer = data.layers[j].data;
@@ -144,8 +158,14 @@ export default class Bout extends Phaser.Scene {
         const mapwidth = data.layers[j].width;
         const mapheight = data.layers[j].height;
 
+		this.mapacross=mapwidth;
+		this.mapdown=mapheight;
+
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
+		
+		this.centerX = centerX;
+		this.centerY = centerY;
 
         let i = 0;
         for(let y = 0; y < mapheight; y++){

@@ -189,8 +189,9 @@ export default class Bout extends Phaser.Scene {
 
               tile.depth = centerY + ty;
 
-              i++;
+
               }
+              i++;
           }
         }
       }

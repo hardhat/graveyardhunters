@@ -78,46 +78,42 @@ export default class Npc extends Actor {
     {
         // Update AI based movement of the NPC relative to the attacking player.
         if (this.activityPoints >= 1) {
+            if (this.attackPossible == true) {
+                //do attack based on enemy type
+                //afterwards probably set attack possible to false, might require another variable
+            } else {
+                if (this.enemyType == "thrall") {
+                    if (this.distantPlayerXPos == true && this.distantPlayerYPos == true) { //>>
+                        this.x = this.x + 1;
+                        this.y = this.y + 1;
+                        this.activityPoints = this.activityPoints - 1;
+                    } else if (this.distantPlayerXNeg == true && this.distantPlayerYPos == true) {//<>
+                        this.x = this.x - 1;
+                        this.y = this.y + 1;
+                        this.activityPoints = this.activityPoints - 1;
+                    } else if (this.distantPlayerXNeg == true && this.distantPlayerYNeg == true) {//<<
+                        this.x = this.x - 1;
+                        this.y = this.y - 1;
+                        this.activityPoints = this.activityPoints - 1;
+                    } else if (this.distantPlayerXPos == true && this.distantPlayerYNeg == true) {//><
+                        this.x = this.x + 1;
+                        this.y = this.y - 1;
+                        this.activityPoints = this.activityPoints - 1;
+                    }
+                    /*
+                    if (this.distantPlayerYPos == false && this.distantPlayerYNeg == false) {
 
-            if (this.enemyType == "thrall") {
-                if (this.scene.player.x >= this.x && this.scene.player.y >= this.y) {
-                    this.x = this.x+1;
-                    this.y = this.y+1;
-                    this.activityPoints = this.activityPoints-1;
-                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
-                    this.x = this.x - 1;
-                    this.y = this.y + 1;
-                    this.activityPoints = this.activityPoints - 1;
-                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
-                    this.x = this.x - 1;
-                    this.y = this.y + 1;
-                    this.activityPoints = this.activityPoints - 1;
-                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
-                    this.x = this.x - 1;
-                    this.y = this.y + 1;
-                    this.activityPoints = this.activityPoints - 1;
-                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
-                    this.x = this.x - 1;
-                    this.y = this.y + 1;
-                    this.activityPoints = this.activityPoints - 1;
-                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
-                    this.x = this.x - 1;
-                    this.y = this.y + 1;
-                    this.activityPoints = this.activityPoints - 1;
+                    } else if (this.distantPlayerXPos == false && this.distantPlayerXNeg == false) {
+
+                    }
+                     */
+                } else if (this.enemyType == "rat") {
+
+                } else if (this.enemyType == "bat") {
+
+                } else if (this.enemyType == "dracula") {
+
                 }
-                /*
-                if (this.distantPlayerYPos == false && this.distantPlayerYNeg == false) {
-
-                } else if (this.distantPlayerXPos == false && this.distantPlayerXNeg == false) {
-
-                }
-                 */
-            } else if (this.enemyType == "rat") {
-
-            } else if (this.enemyType == "bat") {
-
-            } else if (this.enemyType == "dracula") {
-
             }
         }
         return

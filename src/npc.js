@@ -3,13 +3,15 @@ import Actor from './actor.js'
 // Calculates AI and updates Actor class
 
 export default class Npc extends Actor {
-    constructor ({scene,sprite,x,y,health}) {
+    constructor ({scene,sprite,x,y,health,enemyType}) {
         super({scene,sprite,x,y,health});
         this.sprite = sprite;
         this.scene = scene;
         this.x = x;
         this.y = y;
         this.alive = true;
+        this.enemyType = enemyType;
+        this.attackRange = 1;
         this.scene.npcText = [];
         this.addFancyText(375,300);
 
@@ -37,8 +39,87 @@ export default class Npc extends Actor {
       }
     }
 
+    relativeToPlayer(){
+        if (this.scene.player.x > this.x) {
+            this.distantPlayerXPos = true;
+        } else if (this.scene.player.x < this.x) {
+            this.distantPlayerXNeg = true;
+        } else {
+            this.distantPlayerXPos = false;
+            this.distantPlayerXNeg = false;
+        }
+        if (this.scene.player.y > this.y) {
+            this.distantPlayerYPos = true;
+        } else if (this.scene.player.y < this.y) {
+            this.distantPlayerYNeg = true;
+        } else {
+            this.distantPlayerYPos = false;
+            this.distantPlayerYNeg = false;
+        }
+        if (this.distantPlayerXPos == false || this.distantPlayerXPos == false || this.distantPlayerXPos == false || this.distantPlayerXPos == false)
+        {
+            const dx = this.x - this.scene.player.x;
+            const dy = this.y - this.scene.player.y;
+            if (dx * dx + dy * dy < this.attackRange * this.attackRange) {
+                this.attackPossible = true;
+                /// Do action
+            }
+        }
+        /*
+        if (this.distantPlayerXPos == false && this.distantPlayerXNeg = false) {
+            if ((this.scene.player.y - this.y) =< this.attackRange) {
+                this.attackPossible = true;
+            }
+        }
+         */
+    }
+
     update ()
     {
         // Update AI based movement of the NPC relative to the attacking player.
+        if (this.activityPoints >= 1) {
+
+            if (this.enemyType == "thrall") {
+                if (this.scene.player.x >= this.x && this.scene.player.y >= this.y) {
+                    this.x = this.x+1;
+                    this.y = this.y+1;
+                    this.activityPoints = this.activityPoints-1;
+                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
+                    this.x = this.x - 1;
+                    this.y = this.y + 1;
+                    this.activityPoints = this.activityPoints - 1;
+                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
+                    this.x = this.x - 1;
+                    this.y = this.y + 1;
+                    this.activityPoints = this.activityPoints - 1;
+                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
+                    this.x = this.x - 1;
+                    this.y = this.y + 1;
+                    this.activityPoints = this.activityPoints - 1;
+                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
+                    this.x = this.x - 1;
+                    this.y = this.y + 1;
+                    this.activityPoints = this.activityPoints - 1;
+                } else if (this.scene.player.x < this.x && this.scene.player.y > this.y) {
+                    this.x = this.x - 1;
+                    this.y = this.y + 1;
+                    this.activityPoints = this.activityPoints - 1;
+                }
+                /*
+                if (this.distantPlayerYPos == false && this.distantPlayerYNeg == false) {
+
+                } else if (this.distantPlayerXPos == false && this.distantPlayerXNeg == false) {
+
+                }
+                 */
+            } else if (this.enemyType == "rat") {
+
+            } else if (this.enemyType == "bat") {
+
+            } else if (this.enemyType == "dracula") {
+
+            }
+        }
+        return
     }
 }

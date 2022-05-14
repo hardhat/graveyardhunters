@@ -77,7 +77,7 @@ const struct BaseStats {
 	// 1 = bat
 	{1,1,"BAT"},
 	// 2 = rat
-	{1,3,"SPIDER"},
+	{1,3,"RAT"},
 	// 3 = thrall
 	{3,5,"THRALL"},
 	// 4 = dracula

@@ -252,8 +252,17 @@
  "tileheight":32,
  "tilesets":[
         {
+         "columns":10,
          "firstgid":1,
-         "source":"base.tsx"
+         "image":"iso-64x64-outside.png",
+         "imageheight":1024,
+         "imagewidth":640,
+         "margin":0,
+         "name":"base",
+         "spacing":0,
+         "tilecount":160,
+         "tileheight":64,
+         "tilewidth":64
         }],
  "tilewidth":64,
  "type":"map",

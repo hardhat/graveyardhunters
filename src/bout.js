@@ -114,8 +114,6 @@ export default class Bout extends Phaser.Scene {
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
-
-
         /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
 
         keys.W.on('down', function(event) {velocityY = -1});
@@ -135,16 +133,29 @@ export default class Bout extends Phaser.Scene {
         //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
+		
+        var health=30;
 
-		this.playerSprite = this.add.sprite(96,32);
+		var x=this.centerX + 200;
+		var y=this.centerY + 400;
+		// Tile -> World: const tx = (x-y) * this.tileWidthHalf;
+		// Tile -> World: const ty = (x+y) * this.tileHeightHalf;
+		var isoTileX = Math.floor((x-this.centerX)/this.tileWidthHalf);
+		var isoTileY = Math.floor((y-this.centerY)/this.tileHeightHalf);
+		var tileX = (isoTileX+isoTileY)/2;
+		var tileY = isoTileY - tileX;
+		console.log("200, 400 -> "+x+","+y+" -> iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
 
-
+		this.playerSprite = this.add.sprite(x,y);
+		
+		
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
 
+<<<<<<< HEAD
         var x=200;
         var y=400;
 <<<<<<< HEAD
@@ -162,6 +173,8 @@ export default class Bout extends Phaser.Scene {
 			const ty = (x+y) * this.tileHeightHalf;
 		*/
 
+=======
+>>>>>>> parent of ab97923 (Update bout.js)
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
 		/*
         x=600;
@@ -186,7 +199,6 @@ export default class Bout extends Phaser.Scene {
       var scene = this
       const data = scene.cache.json.get('graveyard');
 
-
       const tilewidth = data.tilewidth;
       const tileheight = data.tileheight;
 
@@ -196,6 +208,8 @@ export default class Bout extends Phaser.Scene {
 	  this.tileWidthHalf = tileWidthHalf;
 	  this.tileHeightHalf = tileHeightHalf;
 
+      console.log("Tile half size: "+tileWidthHalf+","+tileHeightHalf);
+	  
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
         if(data.layers[j].type == "objectgroup"){

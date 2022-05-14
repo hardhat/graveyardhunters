@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="isometric" renderorder="right-down" width="32" height="32" tilewidth="64" tileheight="32" nextobjectid="1">
+<map version="1.8" tiledversion="1.8.4" orientation="isometric" renderorder="right-down" width="32" height="32" tilewidth="64" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="2">
  <tileset firstgid="1" source="base.tsx"/>
- <layer name="ground" width="32" height="32">
+ <layer id="1" name="ground" width="32" height="32">
   <data encoding="csv">
 11,17,17,4,11,6,17,7,4,6,12,115,115,115,115,116,6,4,3,13,14,14,7,6,17,5,4,17,5,7,12,3,
 14,12,15,11,6,2,12,13,12,6,17,114,115,115,115,5,7,14,17,16,14,17,4,13,6,5,3,11,2,3,17,1,
@@ -37,7 +37,7 @@
 13,11,16,16,12,17,2,11,5,6,17,111,113,113,115,17,4,6,2,12,1,16,17,7,6,14,1,4,3,7,4,12
 </data>
  </layer>
- <layer name="soild" width="32" height="32">
+ <layer id="2" name="soild" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,129,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -73,7 +73,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="transparent" width="32" height="32">
+ <layer id="3" name="transparent" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -109,7 +109,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="water" width="32" height="32">
+ <layer id="4" name="water" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,92,92,95,0,0,
@@ -145,7 +145,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="stick" width="32" height="32">
+ <layer id="5" name="stick" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -181,4 +181,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="6" name="Spawn Points">
+  <object id="1" x="440" y="460" width="47" height="19">
+   <text wrap="1">Player</text>
+  </object>
+ </objectgroup>
 </map>

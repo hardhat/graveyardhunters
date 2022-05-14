@@ -98,18 +98,18 @@ export default class Bout extends Phaser.Scene {
         //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
-		
+
 		this.playerSprite = this.add.sprite(96,32);
-		
-		
+
+
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
 
-        x=200;
-        y=400;
+        var x=200;
+        var y=400;
         var health=30;
 
 		/*
@@ -147,12 +147,21 @@ export default class Bout extends Phaser.Scene {
 
       var tileWidthHalf = tilewidth / 2;
       var tileHeightHalf = tileheight / 2;
-	  
+
 	  this.tileWidthHalf = tileWidthHalf;
 	  this.tileHeightHalf = tileHeightHalf;
-	  
+
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
+        if(data.layers[j].type == "objectgroup"){
+          var spawnX = data.layers[j].objects[0].x;
+          var spawnY = data.layers[j].objects[0].y;
+          const object = data.layers[j].data;
+          console.log("it worked");
+          console.log(data.layers[j].objects[0].x);
+          console.log(data.layers[j].objects[0].y);
+          return {x: spawnX, y: spawnY};
+        }
         const layer = data.layers[j].data;
 
         const mapwidth = data.layers[j].width;
@@ -163,7 +172,7 @@ export default class Bout extends Phaser.Scene {
 
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
-		
+
 		this.centerX = centerX;
 		this.centerY = centerY;
 

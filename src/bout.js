@@ -127,7 +127,9 @@ export default class Bout extends Phaser.Scene {
         //scene = this;
         this.buildMap();
 
-        this.cameras.main.setSize(4000, 600);
+        this.cameras.main.setSize(4000, 1600);
+        this.cameras.main.setPosition(-600, -300);
+        //this.cameras.main.setZoom();
         /*this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
@@ -159,39 +161,38 @@ export default class Bout extends Phaser.Scene {
         //this.npc.create();
     }
     buildMap(){
-        var scene = this
-        const data = scene.cache.json.get('graveyard');
+      var scene = this
+      const data = scene.cache.json.get('graveyard');
 
-        const tilewidth = data.tilewidth;
-        const tileheight = data.tileheight;
+      const tilewidth = data.tilewidth;
+      const tileheight = data.tileheight;
 
-        var tileWidthHalf = tilewidth / 2;
-        var tileHeightHalf = tileheight / 2;
-        for(let j = 0; j < data.layers.length; j++){
-          console.log(j);
-          const layer = data.layers[j].data;
+      var tileWidthHalf = tilewidth / 2;
+      var tileHeightHalf = tileheight / 2;
+      for(let j = 0; j < data.layers.length; j++){
+        console.log(j);
+        const layer = data.layers[j].data;
 
-          const mapwidth = data.layers[j].width;
-          const mapheight = data.layers[j].height;
+        const mapwidth = data.layers[j].width;
+        const mapheight = data.layers[j].height;
 
-          const centerX = mapwidth * tileWidthHalf;
-          const centerY = 16;
+        const centerX = mapwidth * tileWidthHalf;
+        const centerY = 16;
 
-          let i = 0;
-          for(let y = 0; y < mapheight; y++){
-            for(let x = 0; x < mapwidth; x++){
-              const id = layer[i] - 1;
+        let i = 0;
+        for(let y = 0; y < mapheight; y++){
+          for(let x = 0; x < mapwidth; x++){
+            const id = layer[i] - 1;
 
-              const tx = (x-y) * tileWidthHalf;
-              const ty = (x+y) * tileHeightHalf;
-              if(id != -1){
-              const tile = scene.add.image(centerX + tx, centerY + ty, 'tiles', id);
+            const tx = (x-y) * tileWidthHalf;
+            const ty = (x+y) * tileHeightHalf;
+            if(id != -1){
+            const tile = scene.add.image(centerX + tx, centerY + ty, 'tiles', id);
 
-              tile.depth = centerY + ty;
+            tile.depth = centerY + ty;
 
-
-              }
-              i++;
+            }
+            i++;
           }
         }
       }

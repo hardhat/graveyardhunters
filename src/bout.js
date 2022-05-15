@@ -78,12 +78,11 @@ export default class Bout extends Phaser.Scene {
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
-        this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
         var health=30;
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
         this.player.createAnim('stewie');
-        //this.player.play('stewieidle');
+        this.playerSprite.play('stewieidle');
 
         x=600;
 		this.npcSprite = [this.add.sprite(x,y)];

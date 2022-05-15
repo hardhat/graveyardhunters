@@ -18,7 +18,7 @@ export default class Bout extends Phaser.Scene {
         this.load.spritesheet('tiles', 'assets/map/iso-64x64-outside.png', {frameWidth: 64, frameHeight: 64});
 
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
-    
+
 		this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
@@ -132,17 +132,47 @@ export default class Bout extends Phaser.Scene {
 			npc.create();
 		});
     }
-  findPath(){
-    if(ifFindingPath || isWalking)return;
+  findPath(x,y){
+    var isFindingPath = false;
+    var tapPos = new Phaser.Geom.Point(0,0);
+    var isWalking = false;
+    var borderOffset = new Phaser.Geom.Point(0,0);
+
+    if(isFindingPath || isWalking)return;
     var pos = this.input.mousePointer.position;
-    var isoPt = new Phaser.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
-      
+    var isoPt = new Phaser.Geom.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
+    tapPos = this.isometricToCartesian(isoPt);
+    tapPos.x -= this.tileWidthHalf;
+    tapPos.y += this.tileWidthHalf;
+    tapPos = this.getTileCoordinatesFromCart(tapPos);
+    if(tapPos.x > -1 && tapPos.y > -1 && tapPos.x < 7 && tapPos.y < 7){
+      if(this.layers[1][i] != 1){
+        isFindingPath = true;
+        easystar.findPath(0, 0, tapPos.x, tapPos.y, plotAndMove);
+        easystar.calculate();
+      }
+    }
   }
   plotAndMove(newPath){
+    var path = [];
+    var destination;
 
+    destination = 0;
+    path = newPath;
+    isFindingPath = false;
+    if(path == null){
+      console.log("no path found");
+    } else {
+      path.push(tapPos);
+      path.reverse();
+      path.pop();
+      for(let i = 0; i < path.length; i++){
+        //var tmpSpr
+      }
+    }
   }
 
-  screenPoint(posX, posY){
+  screenPoint(posX, posY){//not needed anymore
     var screenPt = new Phaser.Geom.Point();
     screenPt.x = posX;
     screenPt.y = posY;
@@ -169,7 +199,7 @@ export default class Bout extends Phaser.Scene {
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;
 	}
-	
+
     getTileXYType(pt){
 		var x = pt.x;
 		var y = pt.y;
@@ -178,8 +208,9 @@ export default class Bout extends Phaser.Scene {
 		console.log(id);
 		if(this.layers[1][id] != 0){
 		  console.log("it worked, rock");
-		}
-		console.log("movable");
+		} else{
+		    console.log("movable");
+      }
     }
 
     buildMap(){

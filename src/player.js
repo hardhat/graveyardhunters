@@ -38,6 +38,7 @@ export default class Player extends Actor {
        //this.scene.worldToTileXY({x: posX, y: posY});*/
         console.log(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
         this.scene.getTileXYType(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
+        this.scene.findPath();
       }, this);
       //console.log(this.scene.input.mousePointer.x);
       //console.log(this.scene.input.mousePointer.y);
@@ -46,8 +47,8 @@ export default class Player extends Actor {
 
       this.createPaternHint();
     }
-	
-	
+
+
     createAnim(texture)
     {
         var name = texture;

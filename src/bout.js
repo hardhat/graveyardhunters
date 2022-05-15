@@ -125,38 +125,28 @@ export default class Bout extends Phaser.Scene {
 		var tileX = (isoTileX+isoTileY)/2;
 		var tileY = isoTileY - tileX;
 		console.log("200, 400 -> "+x+","+y+" -> iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
-    //console.log(this.centerX);
 
 		this.playerSprite = this.add.sprite(x,y);
-
-
-
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
-
-        //var x=200;
-        //var y=400;
-
         var health=30;
-
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
 		
         x=600;
 		this.npcSprite = [this.add.sprite(x,y)];
         this.npcSprite.depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
+        if(this.npc[0].alive){
+          this.createAnim('thrall');
+          //this.npcSprite.setScale(4);
+          this.npcSprite[0].play('thrallidle');
+        }
 		
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
-        if(this.npc[0].alive){
-          this.createAnim('thrall');
-          this.npcSprite = this.add.sprite(600,400);
-          //this.npcSprite.setScale(4);
-          this.npcSprite.play('thrallidle');
-        }
 
         /*this.createSounds();*/
         var camX = x;
@@ -178,8 +168,8 @@ export default class Bout extends Phaser.Scene {
           zoomIn: this.input.keyboard.addKey('Q'),
           zoomOut: this.input.keyboard.addKey('E'),
           acceleration: 0.06,
-          drag: 0.0005,
-          maxSpeed: 1.0
+          drag: 0.05,
+          maxSpeed: 10.0
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
@@ -189,6 +179,28 @@ export default class Bout extends Phaser.Scene {
 			npc.create();
 		});
     }
+	
+	cartesianToIsometric(cartPt) {
+		var tempPt=new Phaser.Point();
+		tempPt.x=cartPt.x-cartPt.y;
+		tempPt.y=(cartPt.x+cartPt.y)/2;
+		return tempPt;
+	}
+	
+	isometricToCartesian(isoPt){
+		var tempPt=new Phaser.Point();
+		tempPt.x=(2*isoPt.y+isoPt.x)/2;
+		tempPt.y=(2*isoPt.y-isoPt.x)/2;
+		return tempPt;
+	}
+	
+	getTileCoordinatesFromCart(cartPt, tileHeight) {
+		var tempPt=new Phaser.Point();
+		tempPt.x=Math.floor(cartPt.x/this.tileHeight);
+		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
+		return tempPt;
+	}
+	
     worldToTileXY({x,y}){
       var worldX = Math.round(x);
       var worldY = Math.round(y);
@@ -201,6 +213,7 @@ export default class Bout extends Phaser.Scene {
   		var tileY = isoTileY - tileX;
 
       console.log("iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
+	   return {x: tileX, y:tileY};
     }
 
 
@@ -213,6 +226,7 @@ export default class Bout extends Phaser.Scene {
 
       const tilewidth = data.tilewidth;
       const tileheight = data.tileheight;
+	  this.tileHeight = tileheight;
 
       var tileWidthHalf = tilewidth / 2;
       var tileHeightHalf = tileheight / 2;

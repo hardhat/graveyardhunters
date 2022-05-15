@@ -213,11 +213,12 @@ export default class Npc extends Actor {
                 this.npcMove(-this.scene.tileWidthHalf, 0);
             }
         } else {
-            if (dx>=0) {
+            if (dx >= 0) {
                 this.npcMove(0, this.scene.tileHeightHalf);
             } else {
                 this.npcMove(0, -this.scene.tileHeightHalf);
             }
+        }
         if (moveCase == "plusPlus") { //>>
             this.npcMove(this.scene.tileWidthHalf, this.scene.tileHeightHalf);
         } else if (moveCase == "minusPlus") { //<>

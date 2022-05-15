@@ -209,6 +209,19 @@ export default class Bout extends Phaser.Scene {
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;
 	}
+  getTileXYType(pt){
+    var x = pt.x;
+    var y = pt.y;
+    var id;
+    console.log((y*31)+x);
+    for(let i = 0; i < 32; i++){
+      id = (y * i) + 5;
+      if(id == 55){
+        console.log("it worked " + id + " " + i + " " + x + " " + y);
+
+      }
+    }
+  }
 
     worldToTileXY({x,y}){
       var worldX = Math.round(x);
@@ -231,7 +244,6 @@ export default class Bout extends Phaser.Scene {
       const data = scene.cache.json.get('graveyard');
       var map = this.add.tilemap('graveyard');
       console.log(map);
-
 
       const tilewidth = data.tilewidth;
       const tileheight = data.tileheight;

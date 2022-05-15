@@ -94,27 +94,6 @@ export default class Bout extends Phaser.Scene {
         this.buildMap();
         /*var velocityX = 0;
         var velocityY = 0;*/
-        var camX = -440;
-        var camY = -460;
-        this.cameras.main.setSize(1600, 1200);
-        this.cameras.main.setPosition(camX, camY);
-        //var keyObj = this.input.keyboard.addKey('W');
-        const cursors = this.input.keyboard.createCursorKeys();
-
-        const controlConfig = {
-          camera: this.cameras.main,
-          left: cursors.left,
-          right: cursors.right,
-          up: cursors.up,
-          down: cursors.down,
-          zoomIn: this.input.keyboard.addKey('Q'),
-          zoomOut: this.input.keyboard.addKey('E'),
-          acceleration: 0.06,
-          drag: 0.0005,
-          maxSpeed: 1.0
-        };
-        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-
         /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
 
         keys.W.on('down', function(event) {velocityY = -1});
@@ -146,6 +125,7 @@ export default class Bout extends Phaser.Scene {
 		var tileX = (isoTileX+isoTileY)/2;
 		var tileY = isoTileY - tileX;
 		console.log("200, 400 -> "+x+","+y+" -> iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
+    //console.log(this.centerX);
 
 		this.playerSprite = this.add.sprite(x,y);
 
@@ -156,8 +136,8 @@ export default class Bout extends Phaser.Scene {
         this.playerSprite.play('stewieidle');
         this.playerSprite.flipX = true;
 
-        var x=200;
-        var y=400;
+        //var x=200;
+        //var y=400;
 
         //x =
 
@@ -184,11 +164,48 @@ export default class Bout extends Phaser.Scene {
         }
 
         /*this.createSounds();*/
+        var camX = x;
+        var camY = y;
+        this.cameras.main.setSize(1600, 1200);
+        //this.cameras.main.setPosition(-camX, -camY);
+        this.cameras.main.centerOn(camX+350, camY+300);
+        this.cameras.main.setZoom(1.2);
+        console.log(this.cameras.main.zoom);
+        //var keyObj = this.input.keyboard.addKey('W');
+        const cursors = this.input.keyboard.createCursorKeys();
+
+        const controlConfig = {
+          camera: this.cameras.main,
+          left: cursors.left,
+          right: cursors.right,
+          up: cursors.up,
+          down: cursors.down,
+          zoomIn: this.input.keyboard.addKey('Q'),
+          zoomOut: this.input.keyboard.addKey('E'),
+          acceleration: 0.06,
+          drag: 0.0005,
+          maxSpeed: 1.0
+        };
+        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
         this.player.create();
         //this.hud.create();
         //this.npc.create();
     }
+    worldToTileXY({x,y}){
+      var worldX = Math.round(x);
+      var worldY = Math.round(y);
+      console.log("worldX, worldY" +worldX +", "+ worldY);
+      var isoTileX = Math.floor((worldX-this.centerX)/this.tileWidthHalf);
+  		var isoTileY = Math.floor((worldY-this.centerY)/this.tileHeightHalf);
+      //var isoTileX = Math.floor(((worldY-(this.centerY))/64) + ((worldX - this.centerX)/64));
+  		//var isoTileY = Math.floor(((worldY-(this.centerY))/64) - ((worldX - this.centerX)/64));
+  		var tileX = (isoTileX + isoTileY) / 2;
+  		var tileY = isoTileY - tileX;
+
+      console.log("iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
+    }
+
 
     buildMap(){
       var scene = this

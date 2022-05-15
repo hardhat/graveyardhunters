@@ -26,6 +26,17 @@ export default class Player extends Actor {
       this.scene.input.keyboard.on('keydown-D', k => this.patternMove(this.scene.tileWidthHalf,-this.scene.tileHeightHalf), this);
 
       this.enemy = this.scene.npc;
+      this.scene.input.setPollAlways();
+      this.scene.input.on('pointerdown', function(){
+        var posX = this.scene.input.mousePointer.worldX;
+        var posY = this.scene.input.mousePointer.worldY;
+        console.log(posX + ", " + posY);
+        this.scene.worldToTileXY({x: posX, y: posY});
+      }, this);
+      //console.log(this.scene.input.mousePointer.x);
+      //console.log(this.scene.input.mousePointer.y);
+      //this.scene.bout.worldToTileXY(this.scene.input.mousePointer.x, this.scene.input.mousePointer.y);
+
 
       this.createPaternHint();
     }
@@ -105,11 +116,11 @@ export default class Player extends Actor {
         this.scene.hintText[0].text = 'Choose Action';
 
 		var i=1;
-		this.scene.hintText[i++].text='[1] attack with knives'; 
-		this.scene.hintText[i++].text='[2] uncurse with holy water'; 
-		this.scene.hintText[i++].text='[3] gain 3HP with holy water'; 
-		this.scene.hintText[i++].text='[4] AoE freeze undead with holy water'; 
-		this.scene.hintText[i++].text='[5] stake undead with 2HP or less'; 
+		this.scene.hintText[i++].text='[1] attack with knives';
+		this.scene.hintText[i++].text='[2] uncurse with holy water';
+		this.scene.hintText[i++].text='[3] gain 3HP with holy water';
+		this.scene.hintText[i++].text='[4] AoE freeze undead with holy water';
+		this.scene.hintText[i++].text='[5] stake undead with 2HP or less';
 
         while(i<6) {
             this.scene.hintText[i++].text='';

@@ -20,6 +20,57 @@ export default class Npc extends Actor {
     create(){
         this.scene.npcSprite.flipX = true;
     }
+	
+    createAnimBat(texture)
+    {
+        var name = texture;
+        // Animation set
+        this.scene.anims.create({
+            key: name+'walk',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0, 1,2,3,4,5 ] }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'idle',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [  0,1,2,3,4,5 ] }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'walkN',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 6,7,8,9,10,11 ] }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'attack',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 12,13,14,15,16,17 ] }),
+            frameRate: 12,
+            repeat: 0,
+            repeatDelay: 2000
+        });
+
+
+        this.scene.anims.create({
+            key: name+'die',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 21,21,21,21 ] }),
+            frameRate: 8,
+        });
+
+        const keys = [ 'walk', 'idle', 'attack', 'die' ];
+    }
+	
+	createAnims()
+	{
+		this.createAnimBat('bat');
+		this.createAnimBat('thrall');
+		this.createAnimBat('rat');
+		this.createAnimBat('dracula');
+	}
 
     addFancyText(x,y) {
         var text = this.scene.add.text(x,y,'',{font: "20px Arial Black", fill: "#fff"});

@@ -46,7 +46,43 @@ export default class Player extends Actor {
 
       this.createPaternHint();
     }
+	
+	
+    createAnim(texture)
+    {
+        var name = texture;
+        // Animation set
+        this.scene.anims.create({
+            key: name+'walk',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 1, 2, 3, 4, 5, 6, 7, 8 ] }),
+            frameRate: 8,
+            repeat: -1
+        });
 
+        this.scene.anims.create({
+            key: name+'idle',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0,0,0,0,0,0,0,0,4 ] }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'attack',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0, 9, 9, 0 ] }),
+            frameRate: 8,
+            repeat: -1,
+            repeatDelay: 2000
+        });
+
+
+        this.scene.anims.create({
+            key: name+'die',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0 ] }),
+            frameRate: 8,
+        });
+
+        const keys = [ 'walk', 'idle', 'attack', 'die' ];
+    }
 
     dealDamage(amount)
     {

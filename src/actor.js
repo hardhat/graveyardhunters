@@ -17,8 +17,8 @@ export default class Actor {
         // this.attacks = this.game.add.group();
         // this.attacks.enableBody = true;
         // this.attackSpeed = 500;
-   }
-
+    }
+	
     update()
     {
         // Animation events both the player sprite and any attack particle event. 

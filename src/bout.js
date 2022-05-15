@@ -18,77 +18,20 @@ export default class Bout extends Phaser.Scene {
         this.load.spritesheet('tiles', 'assets/map/iso-64x64-outside.png', {frameWidth: 64, frameHeight: 64});
 
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
-        this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+    
+		this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.dracula = this.load.spritesheet('dracula', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 
-        /*this.load.image('sky', 'assets/sprites/sky.png');
-
-        this.load.image('syllable-do','assets/hud/syllable-do.png');
-        this.load.image('syllable-wah','assets/hud/syllable-wah.png');
-        this.load.image('syllable-uhuh','assets/hud/syllable-uhuh.png');
-        this.load.image('syllable-katta','assets/hud/syllable-katta.png');
-
-        this.candy = this.load.spritesheet('candy', 'assets/sprites/woman.png', { frameWidth: 48, frameHeight: 48 });
-
+	/*
         this.load.image('healthbar', 'assets/hud/healthbar.png');
         this.load.image('hudBg', 'assets/hud/hud-bg.png');
+	*/
 
-        /*this.load.audio('1', [ 'assets/syllables/DO_woman.wav', 'assets/syllables/DO_woman.mp3', 'assets/syllables/DO_woman.ogg' ]);
-        this.load.audio('2', [ 'assets/syllables/WAH_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);
-        this.load.audio('3', [ 'assets/syllables/UHUH_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);
-        this.load.audio('4', [ 'assets/syllables/KATTA_woman.wav', 'assets/syllables/WAH_woman.mp3', 'assets/syllables/WAH_woman.ogg' ]);*/
-
-        /*this.load.audio('woman1', [ 'assets/sfx/FIGHT_woman1.wav' ]);
-        this.load.audio('woman2', [ 'assets/sfx/FIGHT_woman2.wav' ]);
-        this.load.audio('woman3', [ 'assets/sfx/FIGHT_woman3.wav' ]);
-        this.load.audio('woman4', [ 'assets/sfx/FIGHT_woman4.wav' ]);
-        this.load.audio('woman5', [ 'assets/sfx/FIGHT_woman5.wav' ]);
-        this.load.audio('womanwin', [ 'assets/sfx/WIN_woman.wav' ] );
-        this.load.audio('man1', [ 'assets/sfx/FIGHT_man1.wav' ]);
-        this.load.audio('man2', [ 'assets/sfx/FIGHT_man2.wav' ]);
-        this.load.audio('man3', [ 'assets/sfx/FIGHT_man3.wav' ]);
-        this.load.audio('man4', [ 'assets/sfx/FIGHT_man4.wav' ]);
-        this.load.audio('man5', [ 'assets/sfx/FIGHT_man5.wav' ]);
-        this.load.audio('man6', [ 'assets/sfx/FIGHT_man6.wav' ]);
-        this.load.audio('manwin', [ 'assets/sfx/WIN_man.wav' ] );*/
-    }
-
-    createAnim(texture)
-    {
-        var name = texture;
-        // Animation set
-        this.anims.create({
-            key: name+'walk',
-            frames: this.anims.generateFrameNumbers(name, { frames: [ 1, 2, 3, 4, 5, 6, 7, 8 ] }),
-            frameRate: 8,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: name+'idle',
-            frames: this.anims.generateFrameNumbers(name, { frames: [ 0,0,0,0,0,0,0,0,4 ] }),
-            frameRate: 4,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: name+'attack',
-            frames: this.anims.generateFrameNumbers(name, { frames: [ 0, 9, 9, 0 ] }),
-            frameRate: 8,
-            repeat: -1,
-            repeatDelay: 2000
-        });
-
-
-        this.anims.create({
-            key: name+'die',
-            frames: this.anims.generateFrameNumbers(name, { frames: [ 0 ] }),
-            frameRate: 8,
-        });
-
-        const keys = [ 'walk', 'idle', 'attack', 'die' ];
+        this.load.audio('uhh', [ 'assets/sfx/uhh.wav','assets/sfx/uhh.mp3','assets/sfx/uhh.ogg' ]);
+        this.load.audio('maintheme', [ 'assets/sfx/maintheme.ogg','assets/sfx/maintheme.mp3' ]);
+        this.load.audio('dractheme', [ 'assets/sfx/dractheme.ogg','assets/sfx/dractheme.mp3' ]);
     }
 
     create ()
@@ -118,7 +61,6 @@ export default class Bout extends Phaser.Scene {
 
         //this.cameras.main.setZoom();
 
-        this.createAnim('stewie');
 
         var health=30;
 
@@ -140,17 +82,20 @@ export default class Bout extends Phaser.Scene {
         this.playerSprite.flipX = true;
         var health=30;
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
+        this.player.createAnim('stewie');
+        //this.player.play('stewieidle');
 
         x=600;
 		this.npcSprite = [this.add.sprite(x,y)];
         this.npcSprite[0].depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
+        this.npc[0].createAnims();
 
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
         console.log("is npc [0] alive:" + this.npc[0].alive);
         if(this.npc[0].alive){
-          this.createAnim('thrall');
+          //this.createAnim('thrall');
           //this.npcSprite.setScale(4);
           this.npcSprite[0].play('thrallidle');
         }
@@ -225,33 +170,18 @@ export default class Bout extends Phaser.Scene {
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;
 	}
-  getTileXYType(pt){
-    var x = pt.x;
-    var y = pt.y;
-    var id;
-    id = (y * this.mapacross) + x;
-    console.log(id);
-    if(this.layers[1][id] != 0){
-      console.log("it worked, rock");
+	
+    getTileXYType(pt){
+		var x = pt.x;
+		var y = pt.y;
+		var id;
+		id = (y * this.mapacross) + x;
+		console.log(id);
+		if(this.layers[1][id] != 0){
+		  console.log("it worked, rock");
+		}
+		console.log("movable");
     }
-    console.log("movable");
-  }
-
-    worldToTileXY({x,y}){//can be gotten rid obsolice function
-      var worldX = Math.round(x);
-      var worldY = Math.round(y);
-      console.log("worldX, worldY" +worldX +", "+ worldY);
-      var isoTileX = Math.floor((worldX-this.centerX)/this.tileWidthHalf);
-  		var isoTileY = Math.floor((worldY-this.centerY)/this.tileHeightHalf);
-      //var isoTileX = Math.floor(((worldY-(this.centerY))/64) + ((worldX - this.centerX)/64));
-  		//var isoTileY = Math.floor(((worldY-(this.centerY))/64) - ((worldX - this.centerX)/64));
-  		var tileX = (isoTileX + isoTileY) / 2;
-  		var tileY = isoTileY - tileX;
-
-      console.log("iso "+isoTileX+","+isoTileY+" -> tile "+tileX+","+tileY);
-	   return {x: tileX, y:tileY};
-    }
-
 
     buildMap(){
       var scene = this
@@ -317,31 +247,10 @@ export default class Bout extends Phaser.Scene {
 
     createSounds() {
 		/*
-        this.syllable1 = this.sound.add('1');
-        this.syllable2 = this.sound.add('2');
-        this.syllable3 = this.sound.add('3');
-        this.syllable4 = this.sound.add('4');
-        console.log('Do Wa Uhuh Katta');
-
         this.input.keyboard.on('keydown-SPACE', function () {
             console.log("Quiet.");
             this.sound.stopAll();
         }, this);
-
-        this.womanFight = [];
-        this.womanFight.push(this.sound.add('woman1'));
-        this.womanFight.push(this.sound.add('woman2'));
-        this.womanFight.push(this.sound.add('woman3'));
-        this.womanFight.push(this.sound.add('woman4'));
-        this.womanFight.push(this.sound.add('woman5'));
-
-        this.manFight = [];
-        this.manFight.push(this.sound.add('man1'));
-        this.manFight.push(this.sound.add('man2'));
-        this.manFight.push(this.sound.add('man3'));
-        this.manFight.push(this.sound.add('man4'));
-        this.manFight.push(this.sound.add('man5'));
-        this.manFight.push(this.sound.add('man6'));
 
         this.womanWin = this.sound.add('womanwin');
         this.manWin = this.sound.add('manwin');
@@ -368,21 +277,7 @@ export default class Bout extends Phaser.Scene {
     update ()
     {
       this.controls.update();
-      /*var d = 1;
-      if(d){
-        this.cameras.main.scrollX -= 0.5;
-        if(this.cameras.main.scrollX <= 0){
-          d = 0;
-        }
-      }
-      else
-        {
-        this.cameras.main.scrollX += 0.5;
 
-        if(this.cameras.main.scrollX >= 800){
-          d = 1;
-        }
-      }*/
       this.player.update();
       // Use actor for the animated figures.  Each player or npc has an actor.  This updates the player + npc.
 	  this.npc.forEach(npc => {

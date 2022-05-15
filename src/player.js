@@ -28,6 +28,7 @@ export default class Player extends Actor {
       this.enemy = this.scene.npc;
       this.scene.input.setPollAlways();
       var screenPoint;
+      var playerPt = new Phaser.Geom.Point(this.x,this.y);
       this.scene.input.on('pointerdown', function(){
         var screenPt = new Phaser.Geom.Point();
         var posX = this.scene.input.mousePointer.worldX;
@@ -47,7 +48,48 @@ export default class Player extends Actor {
 
       this.createPaternHint();
     }
+    aiWalk(){
+      var stepsTillTurn = 19;
+      var stepsTaken = 0;
 
+      if(this.scene.path.length == 0){
+        if(0 == this.scene.destination.x && 0 == this.scene.destination.y){
+          dX = 0;
+          dY = 0;
+          this.scene.isWalking = false;
+          return;
+        }
+        this.scene.isWlaking = true;
+        if(0 == this.scene.destination.x && 0 == this.scene.destination.y){
+          stepsTaken++;
+          if(stepTaken < stepsTillTurn){
+            return;
+          }
+
+          stepsTaken = 0;
+          this.scene.destination = this.scene.path.pop();
+          if(0 < this.scene.destination.x){
+            dX = 1;
+          } else if (0 > this.scene.destination.x){
+            dX = -1;
+          } else {
+            dX = 0;
+          }
+          if(0 < this.scene.destination.y){
+            dY = 1;
+          } else if(0 > this.scene.destination.y){
+            dY = -1;
+          } else {
+            dY = 0;
+          }
+          if(0 == this.scene.destination.x){
+            dX = 0;
+          } else if (0 == this.scene.destination.y){
+            dY = 0;
+          }
+        }
+      }
+    }
 
     createAnim(texture)
     {

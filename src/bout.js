@@ -39,10 +39,12 @@ export default class Bout extends Phaser.Scene {
         //scene = this;
         this.buildMap();
 
-        var easystar = new EasyStar.js();
-        easystar.setGrid(this.layers[1]);
-        easystar.setAcceptableTiles([0]);
-        easystar.disableCornerCutting();
+        var easystar;
+        console.log(this.listToMatrix(this.layers[1], 32));
+        this.easystar = new EasyStar.js();
+        this.easystar.setGrid(this.listToMatrix(this.layers[1], 32));
+        this.easystar.setAcceptableTiles([0]);
+        this.easystar.disableCornerCutting();
 
         /*var velocityX = 0;
         var velocityY = 0;*/
@@ -132,41 +134,58 @@ export default class Bout extends Phaser.Scene {
 			npc.create();
 		});
     }
-  findPath(x,y){
-    var isFindingPath = false;
+
+  listToMatrix(list, elementPerSubArray){
+    var matrix = [], i, k;
+    for(i = 0, k = -1; i < list.length; i++){
+      if(i % elementPerSubArray === 0){
+        k++;
+        matrix[k] = [];
+      }
+      matrix[k].push(list[i]);
+    }
+    return matrix;
+  }
+  findPath(){
+    console.log(this.id);
+    var isFindingPath;
     var tapPos = new Phaser.Geom.Point(0,0);
-    var isWalking = false;
+    var isWalking;
     var borderOffset = new Phaser.Geom.Point(0,0);
 
-    if(isFindingPath || isWalking)return;
+    this.iswalking = false;
+    this.isFindingPath = false;
+
+    if(this.isFindingPath || this.isWalking)return;
     var pos = this.input.mousePointer.position;
     var isoPt = new Phaser.Geom.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
-    tapPos = this.isometricToCartesian(isoPt);
-    tapPos.x -= this.tileWidthHalf;
-    tapPos.y += this.tileWidthHalf;
-    tapPos = this.getTileCoordinatesFromCart(tapPos);
-    if(tapPos.x > -1 && tapPos.y > -1 && tapPos.x < 7 && tapPos.y < 7){
-      if(this.layers[1][i] != 1){
-        isFindingPath = true;
-        easystar.findPath(0, 0, tapPos.x, tapPos.y, plotAndMove);
-        easystar.calculate();
+    this.tapPos = this.isometricToCartesian(isoPt);
+    this.tapPos.x -= this.tileWidthHalf;
+    this.tapPos.y += this.tileWidthHalf;
+    this.tapPos = this.getTileCoordinatesFromCart(tapPos);
+    if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 7 && this.tapPos.y < 7){
+      if(this.layers[1][this.id] != 1){
+        this.isFindingPath = true;
+        this.easystar.findPath(0, 0, this.tapPos.x, this.tapPos.y, this.plotAndMove);
+        this.easystar.calculate();
       }
     }
   }
   plotAndMove(newPath){
     var path = [];
-    var destination;
+    var destination = new Phaser.Geom.Point(1,1);
+    console.log(destination);
 
-    destination = 0;
-    path = newPath;
-    isFindingPath = false;
-    if(path == null){
+    this.destination = new Phaser.Geom.Point(1,1);
+    this.path = newPath;
+    this.isFindingPath = false;
+    if(this.path == null){
       console.log("no path found");
     } else {
-      path.push(tapPos);
-      path.reverse();
-      path.pop();
-      for(let i = 0; i < path.length; i++){
+      this.path.push(this.tapPos);
+      this.path.reverse();
+      this.path.pop();
+      for(let i = 0; i < this.path.length; i++){
         //var tmpSpr
       }
     }
@@ -205,6 +224,7 @@ export default class Bout extends Phaser.Scene {
 		var y = pt.y;
 		var id;
 		id = (y * this.mapacross) + x;
+    this.id = id;
 		console.log(id);
 		if(this.layers[1][id] != 0){
 		  console.log("it worked, rock");

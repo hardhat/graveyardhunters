@@ -212,15 +212,15 @@ export default class Npc extends Actor {
         console.log('npc moveCase');
         if (this.horizDistanceGreater == true) {
             if (this.dx>=0) {
-                this.npcMove(this.scene.tileWidthHalf, 0);
-            } else {
                 this.npcMove(-this.scene.tileWidthHalf, 0);
+            } else {
+                this.npcMove(this.scene.tileWidthHalf, 0);
             }
         } else {
             if (this.dy >= 0) {
-                this.npcMove(0, this.scene.tileHeightHalf);
-            } else {
                 this.npcMove(0, -this.scene.tileHeightHalf);
+            } else {
+                this.npcMove(0, this.scene.tileHeightHalf);
             }
         }
         /*
@@ -302,7 +302,7 @@ export default class Npc extends Actor {
                 } else if (this.enemyType == "rat") {
 
                 } else if (this.enemyType == "bat") {
-
+                    this.screenToIso();
                 } else if (this.enemyType == "dracula") {
 
                 }

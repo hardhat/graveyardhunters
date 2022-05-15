@@ -173,6 +173,13 @@ export default class Npc extends Actor {
         {
             const dx = this.x - this.scene.player.x;
             const dy = this.y - this.scene.player.y;
+            if (dx*dx >= dy*dy) {
+                this.horizDistanceGreater = true
+                this.vertiDistanceGreater = false
+            } else {
+                this.vertiDistanceGreater = true
+                this.horizDistanceGreater = false
+            }
             if (dx * dx + dy * dy < this.attackRange * this.attackRange) {
                 this.attackPossible = true;
                 //return;
@@ -199,6 +206,18 @@ export default class Npc extends Actor {
 
     screenToIso(moveCase) {
         console.log('npc moveCase');
+        if (this.horizDistanceGreater = true) {
+            if (dx>=0) {
+                this.npcMove(this.scene.tileWidthHalf, 0);
+            } else {
+                this.npcMove(-this.scene.tileWidthHalf, 0);
+            }
+        } else {
+            if (dx>=0) {
+                this.npcMove(0, this.scene.tileHeightHalf);
+            } else {
+                this.npcMove(0, -this.scene.tileHeightHalf);
+            }
         if (moveCase == "plusPlus") { //>>
             this.npcMove(this.scene.tileWidthHalf, this.scene.tileHeightHalf);
         } else if (moveCase == "minusPlus") { //<>

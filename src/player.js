@@ -63,44 +63,44 @@ export default class Player extends Actor {
           dX = 0;
           dY = 0;
           this.scene.isWalking = false;
+          //console.log(this.scene.isWalking);
           return;
         }
-        this.scene.isWlaking = true;
-        if(this.playerTilePt.x == this.scene.destination.x && this.playerTilePt.y == this.scene.destination.y){
-          stepsTaken++;
-          if(stepTaken < stepsTillTurn){
-            return;
-          }
+      }
+      if(this.playerTilePt.x == this.scene.destination.x && this.playerTilePt.y == this.scene.destination.y){
+        stepsTaken++;
+        if(stepTaken < stepsTillTurn){
+          return;
+        }
 
-          stepsTaken = 0;
-          this.scene.destination = this.scene.path.pop();
-          if(this.playerTilePt.x < this.scene.destination.x){
-            dX = 1;
-            console.log(dX);
-          } else if (this.playerTilePt.x > this.scene.destination.x){
-            dX = -1;
-            console.log(dX);
-          } else {
-            dX = 0;
-            console.log(dX);
-          }
-          if(this.playerTilePt.y < this.scene.destination.y){
-            dY = 1;
-            console.log(dY);
-          } else if(this.playerTilePt.y > this.scene.destination.y){
-            dY = -1;
-            console.log(dY);
-          } else {
-            dY = 0;
-            console.log(dY);
-          }
-          if(this.playerTilePt.x == this.scene.destination.x){
-            dX = 0;
-            console.log(dX);
-          } else if (this.playerTilePt.y == this.scene.destination.y){
-            dY = 0;
-            console.log(dY);
-          }
+        stepsTaken = 0;
+        this.scene.destination = this.scene.path.pop();
+        if(this.playerTilePt.x < this.scene.destination.x){
+          dX = 1;
+          console.log(dX);
+        } else if (this.playerTilePt.x > this.scene.destination.x){
+          dX = -1;
+          console.log(dX);
+        } else {
+          dX = 0;
+          console.log(dX);
+        }
+        if(this.playerTilePt.y < this.scene.destination.y){
+          dY = 1;
+          console.log(dY);
+        } else if(this.playerTilePt.y > this.scene.destination.y){
+          dY = -1;
+          console.log(dY);
+        } else {
+          dY = 0;
+          console.log(dY);
+        }
+        if(this.playerTilePt.x == this.scene.destination.x){
+          dX = 0;
+          console.log(dX);
+        } else if (this.playerTilePt.y == this.scene.destination.y){
+          dY = 0;
+          console.log(dY);
         }
       }
     }

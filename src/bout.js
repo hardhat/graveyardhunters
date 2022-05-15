@@ -50,7 +50,7 @@ export default class Bout extends Phaser.Scene {
         var tapPos = new Phaser.Geom.Point(0,0);
         var isWalking = false;
         var borderOffset = new Phaser.Geom.Point(0,0);
-        var path = undefined || [];
+        var path = [];
         var destination = new Phaser.Geom.Point(15,9);
         this.isFindingPath = isFindingPath;
         this.tapPos = tapPos;
@@ -195,17 +195,16 @@ export default class Bout extends Phaser.Scene {
   //var isFindingPath = false;
 
     //this.destinatio
-    this.path = newPath;
-    console.log(this.path);
-    console.log(this.newPath);
-    //this.path = path;
-    this.isFindingPath = false;
-    if(this.path == null){
+    console.log(newPath);
+    var path = newPath;
+    console.log(path);
+    //this.isFindingPath = false;
+    if(path == null){
       console.log("no path found");
     } else {
-      this.path.push(this.tapPos);
-      this.path.reverse();
-      this.path.pop();
+      path.push(this.tapPos);
+      path.reverse();
+      path.pop();
       for(let i = 0; i < this.path.length; i++){
         //var tmpSpr
       }

@@ -27,11 +27,16 @@ export default class Player extends Actor {
 
       this.enemy = this.scene.npc;
       this.scene.input.setPollAlways();
+      var screenPoint;
       this.scene.input.on('pointerdown', function(){
+        var screenPt = new Phaser.Geom.Point();
         var posX = this.scene.input.mousePointer.worldX;
         var posY = this.scene.input.mousePointer.worldY;
+        screenPt.x = posX;
+        screenPt.y = posY;
         console.log(posX + ", " + posY);
-        this.scene.worldToTileXY({x: posX, y: posY});
+       //this.scene.worldToTileXY({x: posX, y: posY});*/
+        console.log(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
       }, this);
       //console.log(this.scene.input.mousePointer.x);
       //console.log(this.scene.input.mousePointer.y);

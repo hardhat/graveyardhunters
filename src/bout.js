@@ -147,7 +147,7 @@ export default class Bout extends Phaser.Scene {
           //this.npcSprite.setScale(4);
           this.npcSprite[0].play('thrallidle');
         }
-		
+
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
 
@@ -175,35 +175,41 @@ export default class Bout extends Phaser.Scene {
           maxSpeed: 1.0
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-
         this.player.create();
         //this.hud.create();
         this.npc.forEach(npc => {
 			npc.create();
 		});
     }
-	
+
+  screenPoint(posX, posY){
+    var screenPt = new Phaser.Geom.Point();
+    screenPt.x = posX;
+    screenPt.y = posY;
+    return(this.screenPt);
+  }
+
 	cartesianToIsometric(cartPt) {
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=cartPt.x-cartPt.y;
 		tempPt.y=(cartPt.x+cartPt.y)/2;
 		return tempPt;
 	}
-	
+
 	isometricToCartesian(isoPt){
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=(2*isoPt.y+isoPt.x)/2;
 		tempPt.y=(2*isoPt.y-isoPt.x)/2;
 		return tempPt;
 	}
-	
+
 	getTileCoordinatesFromCart(cartPt) {
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=Math.floor(cartPt.x/this.tileHeight);
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;
 	}
-	
+
     worldToTileXY({x,y}){
       var worldX = Math.round(x);
       var worldY = Math.round(y);

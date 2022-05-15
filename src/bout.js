@@ -46,6 +46,20 @@ export default class Bout extends Phaser.Scene {
         this.easystar.setAcceptableTiles([0]);
         this.easystar.disableCornerCutting();
 
+        var isFindingPath = false;
+        var tapPos = new Phaser.Geom.Point(0,0);
+        var isWalking = false;
+        var borderOffset = new Phaser.Geom.Point(0,0);
+        var path = [];
+        var destination = new Phaser.Geom.Point(0,0);
+        this.isFindingPath = isFindingPath;
+        this.tapPos = tapPos;
+        this.isWalking =  isWalking;
+        this.borderOffset = borderOffset;
+        this.destination = destination;
+        this.path = path;
+
+
         /*var velocityX = 0;
         var velocityY = 0;*/
         /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
@@ -153,38 +167,32 @@ export default class Bout extends Phaser.Scene {
     }
     return matrix;
   }
-  findPath(){
+  findPath(playerPt){
+    var playerMapTile = new Phaser.Geom.Point();
+    playerMapTile = playerPt;
     console.log(this.id);
-    var isFindingPath;
-    var tapPos = new Phaser.Geom.Point(0,0);
-    var isWalking;
-    var borderOffset = new Phaser.Geom.Point(0,0);
-
-    this.iswalking = false;
-    this.isFindingPath = false;
-
+    console.log(playerPt.x + " " + playerPt.y);
     if(this.isFindingPath || this.isWalking)return;
     var pos = this.input.mousePointer.position;
-    var isoPt = new Phaser.Geom.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
+    var isoPt = new Phaser.Geom.Point(pos.x - 0, pos.y - 0);
     this.tapPos = this.isometricToCartesian(isoPt);
     this.tapPos.x -= this.tileWidthHalf;
     this.tapPos.y += this.tileWidthHalf;
-    this.tapPos = this.getTileCoordinatesFromCart(tapPos);
-    if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 7 && this.tapPos.y < 7){
+    this.tapPos = this.getTileCoordinatesFromCart(this.tapPos);
+    if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 32 && this.tapPos.y < 32){
       if(this.layers[1][this.id] != 1){
         this.isFindingPath = true;
-        this.easystar.findPath(0, 0, this.tapPos.x, this.tapPos.y, this.plotAndMove);
+        this.easystar.findPath(playerPt.x, playerPt.y, this.tapPos.x, this.tapPos.y, this.plotAndMove);
         this.easystar.calculate();
       }
     }
   }
   plotAndMove(newPath){
-    var path = [];
-    var destination = new Phaser.Geom.Point(1,1);
-    console.log(destination);
+  //var isFindingPath = false;
 
-    this.destination = new Phaser.Geom.Point(1,1);
+    //this.destination
     this.path = newPath;
+    //this.path = path;
     this.isFindingPath = false;
     if(this.path == null){
       console.log("no path found");

@@ -50,8 +50,8 @@ export default class Bout extends Phaser.Scene {
         var tapPos = new Phaser.Geom.Point(0,0);
         var isWalking = false;
         var borderOffset = new Phaser.Geom.Point(0,0);
-        var path = [];
-        var destination = new Phaser.Geom.Point(0,0);
+        var path = undefined || [];
+        var destination = new Phaser.Geom.Point(15,9);
         this.isFindingPath = isFindingPath;
         this.tapPos = tapPos;
         this.isWalking =  isWalking;
@@ -173,25 +173,31 @@ export default class Bout extends Phaser.Scene {
     console.log(this.id);
     console.log(playerPt.x + " " + playerPt.y);
     if(this.isFindingPath || this.isWalking)return;
-    var pos = this.input.mousePointer.position;
-    var isoPt = new Phaser.Geom.Point(pos.x - 0, pos.y - 0);
+    var posX = this.input.mousePointer.worldX;
+    var posY = this.input.mousePointer.worldY;
+    console.log(posX + " " + posY);
+    var isoPt = new Phaser.Geom.Point(posX - 0, posY - 0);
     this.tapPos = this.isometricToCartesian(isoPt);
     this.tapPos.x -= this.tileWidthHalf;
     this.tapPos.y += this.tileWidthHalf;
     this.tapPos = this.getTileCoordinatesFromCart(this.tapPos);
+    console.log(this.tapPos.x + " " + this.tapPos.y);
     if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 32 && this.tapPos.y < 32){
       if(this.layers[1][this.id] != 1){
         this.isFindingPath = true;
         this.easystar.findPath(playerPt.x, playerPt.y, this.tapPos.x, this.tapPos.y, this.plotAndMove);
         this.easystar.calculate();
+        console.log("made path");
       }
     }
   }
   plotAndMove(newPath){
   //var isFindingPath = false;
 
-    //this.destination
+    //this.destinatio
     this.path = newPath;
+    console.log(this.path);
+    console.log(this.newPath);
     //this.path = path;
     this.isFindingPath = false;
     if(this.path == null){

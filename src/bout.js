@@ -214,14 +214,16 @@ export default class Bout extends Phaser.Scene {
     var x = pt.x;
     var y = pt.y;
     var id;
-    console.log((y*31)+x);
-    for(let i = 0; i < 32; i++){
-      id = (y * i) + 5;
-      if(id == 55){
-        console.log("it worked " + id + " " + i + " " + x + " " + y);
+    id = (y * this.mapacross) + x;
+    console.log(id);
+    //console.log(this.data.layers[0].data[id]);
+    //for(let j = 0; j < this.layers.length; j++){
+      if(this.layers[1][id] != 0){
+        console.log("it worked, rock");
 
       }
-    }
+    //}
+
   }
 
     worldToTileXY({x,y}){
@@ -256,6 +258,7 @@ export default class Bout extends Phaser.Scene {
 	  this.tileWidthHalf = tileWidthHalf;
 	  this.tileHeightHalf = tileHeightHalf;
 
+      this.layers = [];
       for(let j = 0; j < data.layers.length; j++){
         console.log(j);
         if(data.layers[j].type == "objectgroup"){
@@ -268,6 +271,7 @@ export default class Bout extends Phaser.Scene {
           return {x: spawnX, y: spawnY};
         }
         const layer = data.layers[j].data;
+        this.layers.push(layer);
 
         const mapwidth = data.layers[j].width;
         const mapheight = data.layers[j].height;

@@ -171,16 +171,20 @@ export default class Npc extends Actor {
         }
         if (this.distantPlayerXPos == false || this.distantPlayerXNeg == false || this.distantPlayerYPos == false || this.distantPlayerYNeg == false)
         {
+            /*
             const dx = this.x - this.scene.player.x;
             const dy = this.y - this.scene.player.y;
-            if (dx*dx >= dy*dy) {
+            */
+            this.dx = this.x - this.scene.player.x;
+            this.dy = this.y - this.scene.player.y;
+            if (this.dx*this.dx >= this.dy*this.dy) {
                 this.horizDistanceGreater = true
                 this.vertiDistanceGreater = false
             } else {
                 this.vertiDistanceGreater = true
                 this.horizDistanceGreater = false
             }
-            if (dx * dx + dy * dy < this.attackRange * this.attackRange) {
+            if (this.dx * this.dx + this.dy * this.dy < this.attackRange * this.attackRange) {
                 this.attackPossible = true;
                 //return;
                 /// Do action
@@ -207,13 +211,13 @@ export default class Npc extends Actor {
     screenToIso(moveCase) {
         console.log('npc moveCase');
         if (this.horizDistanceGreater == true) {
-            if (dx>=0) {
+            if (this.dx>=0) {
                 this.npcMove(this.scene.tileWidthHalf, 0);
             } else {
                 this.npcMove(-this.scene.tileWidthHalf, 0);
             }
         } else {
-            if (dy >= 0) {
+            if (this.dy >= 0) {
                 this.npcMove(0, this.scene.tileHeightHalf);
             } else {
                 this.npcMove(0, -this.scene.tileHeightHalf);
@@ -266,7 +270,7 @@ export default class Npc extends Actor {
             } else {
                 console.log(this.enemyType + this.index + 'is trying to move');
                 if (this.enemyType == "thrall") {
-                    
+                    this.screenToIso();
                     if (this.distantPlayerXPos == true && this.distantPlayerYPos == true) { //>>
                         //this.x = this.x + 1;
                         //this.x = this.y + 1;

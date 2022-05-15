@@ -137,11 +137,12 @@ export default class Bout extends Phaser.Scene {
 
         x=600;
 		this.npcSprite = [this.add.sprite(x,y)];
-        this.npcSprite.depth = 10000;
+        this.npcSprite[0].depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
 
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
+        console.log("is npc [0] alive:" + this.npc[0].alive);
         if(this.npc[0].alive){
           this.createAnim('thrall');
           //this.npcSprite.setScale(4);

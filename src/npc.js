@@ -206,19 +206,20 @@ export default class Npc extends Actor {
 
     screenToIso(moveCase) {
         console.log('npc moveCase');
-        if (this.horizDistanceGreater = true) {
+        if (this.horizDistanceGreater == true) {
             if (dx>=0) {
                 this.npcMove(this.scene.tileWidthHalf, 0);
             } else {
                 this.npcMove(-this.scene.tileWidthHalf, 0);
             }
         } else {
-            if (dx >= 0) {
+            if (dy >= 0) {
                 this.npcMove(0, this.scene.tileHeightHalf);
             } else {
                 this.npcMove(0, -this.scene.tileHeightHalf);
             }
         }
+        /*
         if (moveCase == "plusPlus") { //>>
             this.npcMove(this.scene.tileWidthHalf, this.scene.tileHeightHalf);
         } else if (moveCase == "minusPlus") { //<>
@@ -230,6 +231,7 @@ export default class Npc extends Actor {
         } else {
             return;
         }
+        */
     }
 
     npcMove(dx,dy)
@@ -264,6 +266,7 @@ export default class Npc extends Actor {
             } else {
                 console.log(this.enemyType + this.index + 'is trying to move');
                 if (this.enemyType == "thrall") {
+                    
                     if (this.distantPlayerXPos == true && this.distantPlayerYPos == true) { //>>
                         //this.x = this.x + 1;
                         //this.x = this.y + 1;

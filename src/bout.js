@@ -175,7 +175,6 @@ export default class Bout extends Phaser.Scene {
           maxSpeed: 10.0
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        var screenPt = new Phaser.Point();
         this.player.create();
         //this.hud.create();
         this.npc.forEach(npc => {
@@ -184,27 +183,28 @@ export default class Bout extends Phaser.Scene {
     }
 
   screenPoint(posX, posY){
-    this.screenPt.x = posX;
-    this.screenPt.y = posY;
+    var screenPt = new Phaser.Geom.Point();
+    screenPt.x = posX;
+    screenPt.y = posY;
     return(this.screenPt);
   }
 
 	cartesianToIsometric(cartPt) {
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=cartPt.x-cartPt.y;
 		tempPt.y=(cartPt.x+cartPt.y)/2;
 		return tempPt;
 	}
 
 	isometricToCartesian(isoPt){
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=(2*isoPt.y+isoPt.x)/2;
 		tempPt.y=(2*isoPt.y-isoPt.x)/2;
 		return tempPt;
 	}
 
 	getTileCoordinatesFromCart(cartPt, tileHeight) {
-		var tempPt=new Phaser.Point();
+		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=Math.floor(cartPt.x/this.tileHeight);
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;

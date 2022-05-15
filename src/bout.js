@@ -20,7 +20,7 @@ export default class Bout extends Phaser.Scene {
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
 
 		this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
-		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		this.thrall = this.load.spritesheet('thrall', 'assets/character/thrall-walk.png', { frameWidth: 64, frameHeight: 96 });
 		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.dracula = this.load.spritesheet('dracula', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 
@@ -92,13 +92,20 @@ export default class Bout extends Phaser.Scene {
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
 
+        x=500; y-=64;
+		this.npcSprite.push(this.add.sprite(x,y));
+        this.npcSprite[1].depth = 10000;
+        this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:x, y:y, health: health, enemyType: 'bat'}));
+
+
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
         console.log("is npc [0] alive:" + this.npc[0].alive);
         if(this.npc[0].alive){
-          //this.createAnim('thrall');
-          //this.npcSprite.setScale(4);
           this.npcSprite[0].play('thrallidle');
+        }
+        if(this.npc[1].alive){
+          this.npcSprite[1].play('batidle');
         }
 
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});

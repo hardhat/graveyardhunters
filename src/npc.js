@@ -63,11 +63,54 @@ export default class Npc extends Actor {
 
         const keys = [ 'walk', 'idle', 'attack', 'die' ];
     }
+
+    createAnimThrall(texture)
+    {
+        var name = texture;
+        // Animation set
+        this.scene.anims.create({
+            key: name+'walk',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0,1,2,3,4,5,6,7 ] }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'idle',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [  0,0,0,0,1,1,1,1 ] }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'walkN',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 8,9,10,11,12,13,14,15 ] }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.scene.anims.create({
+            key: name+'attack',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 8,0,8,0 ] }),
+            frameRate: 12,
+            repeat: 0,
+            repeatDelay: 2000
+        });
+
+
+        this.scene.anims.create({
+            key: name+'die',
+            frames: this.scene.anims.generateFrameNumbers(name, { frames: [ 0 ] }),
+            frameRate: 8,
+        });
+
+        const keys = [ 'walk', 'idle', 'attack', 'die' ];
+    }
 	
 	createAnims()
 	{
 		this.createAnimBat('bat');
-		this.createAnimBat('thrall');
+		this.createAnimThrall('thrall');
 		this.createAnimBat('rat');
 		this.createAnimBat('dracula');
 	}

@@ -18,9 +18,9 @@ export default class Bout extends Phaser.Scene {
         this.load.spritesheet('tiles', 'assets/map/iso-64x64-outside.png', {frameWidth: 64, frameHeight: 64});
 
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
-    
+
 		this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
-		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		this.thrall = this.load.spritesheet('thrall', 'assets/character/thrall-walk.png', { frameWidth: 64, frameHeight: 96 });
 		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.dracula = this.load.spritesheet('dracula', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 
@@ -39,10 +39,26 @@ export default class Bout extends Phaser.Scene {
         //scene = this;
         this.buildMap();
 
-        var easystar = new EasyStar.js();
-        easystar.setGrid(this.layers[1]);
-        easystar.setAcceptableTiles([0]);
-        easystar.disableCornerCutting();
+        var easystar;
+        console.log(this.listToMatrix(this.layers[1], 32));
+        this.easystar = new EasyStar.js();
+        this.easystar.setGrid(this.listToMatrix(this.layers[1], 32));
+        this.easystar.setAcceptableTiles([0]);
+        this.easystar.disableCornerCutting();
+
+        var isFindingPath = false;
+        var tapPos = new Phaser.Geom.Point(0,0);
+        var isWalking = false;
+        var borderOffset = new Phaser.Geom.Point(0,0);
+        var path = undefined || [];
+        var destination = new Phaser.Geom.Point(15,9);
+        this.isFindingPath = isFindingPath;
+        this.tapPos = tapPos;
+        this.isWalking =  isWalking;
+        this.borderOffset = borderOffset;
+        this.destination = destination;
+        this.path = path;
+
 
         /*var velocityX = 0;
         var velocityY = 0;*/
@@ -90,13 +106,20 @@ export default class Bout extends Phaser.Scene {
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
 
+        x=500; y-=64;
+		this.npcSprite.push(this.add.sprite(x,y));
+        this.npcSprite[1].depth = 10000;
+        this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:x, y:y, health: health, enemyType: 'bat'}));
+
+
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
         console.log("is npc [0] alive:" + this.npc[0].alive);
         if(this.npc[0].alive){
-          //this.createAnim('thrall');
-          //this.npcSprite.setScale(4);
           this.npcSprite[0].play('thrallidle');
+        }
+        if(this.npc[1].alive){
+          this.npcSprite[1].play('batidle');
         }
 
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
@@ -132,17 +155,64 @@ export default class Bout extends Phaser.Scene {
 			npc.create();
 		});
     }
-  findPath(){
-    if(ifFindingPath || isWalking)return;
-    var pos = this.input.mousePointer.position;
-    var isoPt = new Phaser.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
-      
+
+  listToMatrix(list, elementPerSubArray){
+    var matrix = [], i, k;
+    for(i = 0, k = -1; i < list.length; i++){
+      if(i % elementPerSubArray === 0){
+        k++;
+        matrix[k] = [];
+      }
+      matrix[k].push(list[i]);
+    }
+    return matrix;
+  }
+  findPath(playerPt){
+    var playerMapTile = new Phaser.Geom.Point();
+    playerMapTile = playerPt;
+    console.log(this.id);
+    console.log(playerPt.x + " " + playerPt.y);
+    if(this.isFindingPath || this.isWalking)return;
+    var posX = this.input.mousePointer.worldX;
+    var posY = this.input.mousePointer.worldY;
+    console.log(posX + " " + posY);
+    var isoPt = new Phaser.Geom.Point(posX - 0, posY - 0);
+    this.tapPos = this.isometricToCartesian(isoPt);
+    this.tapPos.x -= this.tileWidthHalf;
+    this.tapPos.y += this.tileWidthHalf;
+    this.tapPos = this.getTileCoordinatesFromCart(this.tapPos);
+    console.log(this.tapPos.x + " " + this.tapPos.y);
+    if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 32 && this.tapPos.y < 32){
+      if(this.layers[1][this.id] != 1){
+        this.isFindingPath = true;
+        this.easystar.findPath(playerPt.x, playerPt.y, this.tapPos.x, this.tapPos.y, this.plotAndMove);
+        this.easystar.calculate();
+        console.log("made path");
+      }
+    }
   }
   plotAndMove(newPath){
+  //var isFindingPath = false;
 
+    //this.destinatio
+    this.path = newPath;
+    console.log(this.path);
+    console.log(this.newPath);
+    //this.path = path;
+    this.isFindingPath = false;
+    if(this.path == null){
+      console.log("no path found");
+    } else {
+      this.path.push(this.tapPos);
+      this.path.reverse();
+      this.path.pop();
+      for(let i = 0; i < this.path.length; i++){
+        //var tmpSpr
+      }
+    }
   }
 
-  screenPoint(posX, posY){
+  screenPoint(posX, posY){//not needed anymore
     var screenPt = new Phaser.Geom.Point();
     screenPt.x = posX;
     screenPt.y = posY;
@@ -169,17 +239,19 @@ export default class Bout extends Phaser.Scene {
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
 		return tempPt;
 	}
-	
+
     getTileXYType(pt){
 		var x = pt.x;
 		var y = pt.y;
 		var id;
 		id = (y * this.mapacross) + x;
+    this.id = id;
 		console.log(id);
 		if(this.layers[1][id] != 0){
 		  console.log("it worked, rock");
-		}
-		console.log("movable");
+		} else{
+		    console.log("movable");
+      }
     }
 
     buildMap(){

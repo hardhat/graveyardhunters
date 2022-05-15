@@ -28,6 +28,10 @@ export default class Player extends Actor {
       this.enemy = this.scene.npc;
       this.scene.input.setPollAlways();
       var screenPoint;
+      var playerPt = new Phaser.Geom.Point(this.x,this.y);
+      var playerTilePt = new Phaser.Geom.Point(15,9);
+      this.playerPt = playerPt;
+      this.playerTilePt = playerTilePt;
       this.scene.input.on('pointerdown', function(){
         var screenPt = new Phaser.Geom.Point();
         var posX = this.scene.input.mousePointer.worldX;
@@ -38,6 +42,7 @@ export default class Player extends Actor {
        //this.scene.worldToTileXY({x: posX, y: posY});*/
         console.log(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
         this.scene.getTileXYType(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
+        this.scene.findPath(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(playerPt, 32)));
       }, this);
       //console.log(this.scene.input.mousePointer.x);
       //console.log(this.scene.input.mousePointer.y);
@@ -46,8 +51,60 @@ export default class Player extends Actor {
 
       this.createPaternHint();
     }
-	
-	
+    aiWalk(){
+      var stepsTillTurn = 19;
+      var stepsTaken = 0;
+      var dX;
+      var dY;
+      //console.log(this.scene.destination.x);
+      //console.log(this.scene.path.length);
+      if(this.scene.path.length == 0){
+        if(this.playerTilePt.x == this.scene.destination.x && this.playerTilePt.y == this.scene.destination.y){
+          dX = 0;
+          dY = 0;
+          this.scene.isWalking = false;
+          return;
+        }
+        this.scene.isWlaking = true;
+        if(this.playerTilePt.x == this.scene.destination.x && this.playerTilePt.y == this.scene.destination.y){
+          stepsTaken++;
+          if(stepTaken < stepsTillTurn){
+            return;
+          }
+
+          stepsTaken = 0;
+          this.scene.destination = this.scene.path.pop();
+          if(this.playerTilePt.x < this.scene.destination.x){
+            dX = 1;
+            console.log(dX);
+          } else if (this.playerTilePt.x > this.scene.destination.x){
+            dX = -1;
+            console.log(dX);
+          } else {
+            dX = 0;
+            console.log(dX);
+          }
+          if(this.playerTilePt.y < this.scene.destination.y){
+            dY = 1;
+            console.log(dY);
+          } else if(this.playerTilePt.y > this.scene.destination.y){
+            dY = -1;
+            console.log(dY);
+          } else {
+            dY = 0;
+            console.log(dY);
+          }
+          if(this.playerTilePt.x == this.scene.destination.x){
+            dX = 0;
+            console.log(dX);
+          } else if (this.playerTilePt.y == this.scene.destination.y){
+            dY = 0;
+            console.log(dY);
+          }
+        }
+      }
+    }
+
     createAnim(texture)
     {
         var name = texture;
@@ -127,6 +184,7 @@ export default class Player extends Actor {
     update ()
     {
 		this.updatePatternHint()
+    this.aiWalk();
     }
 
     createPaternHint()

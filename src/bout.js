@@ -95,6 +95,12 @@ export default class Bout extends Phaser.Scene {
     {
         //scene = this;
         this.buildMap();
+
+        var easystar = new EasyStar.js();
+        easystar.setGrid(this.layers[1]);
+        easystar.setAcceptableTiles([0]);
+        easystar.disableCornerCutting();
+
         /*var velocityX = 0;
         var velocityY = 0;*/
         /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
@@ -182,6 +188,15 @@ export default class Bout extends Phaser.Scene {
 			npc.create();
 		});
     }
+  findPath(){
+    if(ifFindingPath || isWalking)return;
+    var pos = this.input.mousePointer.position;
+    var isoPt = new Phaser.Point(pos.x - borderOffset.x, pos.y - borderOffset.y);
+      
+  }
+  plotAndMove(newPath){
+
+  }
 
   screenPoint(posX, posY){
     var screenPt = new Phaser.Geom.Point();
@@ -216,17 +231,13 @@ export default class Bout extends Phaser.Scene {
     var id;
     id = (y * this.mapacross) + x;
     console.log(id);
-    //console.log(this.data.layers[0].data[id]);
-    //for(let j = 0; j < this.layers.length; j++){
-      if(this.layers[1][id] != 0){
-        console.log("it worked, rock");
-
-      }
-    //}
-
+    if(this.layers[1][id] != 0){
+      console.log("it worked, rock");
+    }
+    console.log("movable");
   }
 
-    worldToTileXY({x,y}){
+    worldToTileXY({x,y}){//can be gotten rid obsolice function
       var worldX = Math.round(x);
       var worldY = Math.round(y);
       console.log("worldX, worldY" +worldX +", "+ worldY);

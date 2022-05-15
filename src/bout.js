@@ -22,7 +22,7 @@ export default class Bout extends Phaser.Scene {
 		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
 		this.dracula = this.load.spritesheet('dracula', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
-		
+
         /*this.load.image('sky', 'assets/sprites/sky.png');
 
         this.load.image('syllable-do','assets/hud/syllable-do.png');
@@ -134,11 +134,14 @@ export default class Bout extends Phaser.Scene {
         this.playerSprite.flipX = true;
         var health=30;
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
-		
+
         x=600;
 		this.npcSprite = [this.add.sprite(x,y)];
         this.npcSprite.depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
+
+        this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
+
         if(this.npc[0].alive){
           this.createAnim('thrall');
           //this.npcSprite.setScale(4);
@@ -253,8 +256,8 @@ export default class Bout extends Phaser.Scene {
 		this.mapacross=mapwidth;
 		this.mapdown=mapheight;
 
-        const centerX = mapwidth * tileWidthHalf;
-        const centerY = 16;
+        const centerX = 0;//mapwidth * tileWidthHalf;
+        const centerY = 0;//16;
 
 		this.centerX = centerX;
 		this.centerY = centerY;

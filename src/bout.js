@@ -105,6 +105,7 @@ export default class Bout extends Phaser.Scene {
         this.npcSprite[0].depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
+        this.npc[0].activityPoints=3;
 
         x=500; y-=64;
 		this.npcSprite.push(this.add.sprite(x,y));

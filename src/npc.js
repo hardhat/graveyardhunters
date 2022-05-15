@@ -13,12 +13,23 @@ export default class Npc extends Actor {
         this.enemyType = enemyType;
         this.attackRange = 1;
         this.scene.npcText = [];
+        this.npcPoint = new Phaser.Geom.Point();
+        this.npcTilePoint = new Phaser.Geom.Point();
         this.addFancyText(375,300);
 
     }
 
     create(){
         this.scene.npcSprite.flipX = true;
+        this.npcPoint.x = this.x;
+        this.npcPoint.y = this.y;
+        this.npcTilePoint.x = this.sprite.x;
+        this.npcTilePoint.y = this.sprite.y;
+        this.distantPlayerXPos = true;
+        this.distantPlayerXNeg = true;
+        this.distantPlayerYPos = true;
+        this.distantPlayerYNeg = true;
+        this.activityPoints = 3;
     }
 	
     createAnimBat(texture)
@@ -134,6 +145,14 @@ export default class Npc extends Actor {
     }
 
     relativeToPlayer(){
+
+        /*
+        this.distantPlayerXPos; /n this.distantPlayerXPos; /n this.distantPlayerXPos; /n this.distantPlayerXPos;
+        this.distantPlayerXPos = new boolean;
+        this.distantPlayerXNeg = new boolean;
+        this.distantPlayerYPos = new boolean;
+        this.distantPlayerYNeg = new boolean;
+         */
         if (this.scene.player.x > this.x) {
             this.distantPlayerXPos = true;
         } else if (this.scene.player.x < this.x) {
@@ -150,15 +169,25 @@ export default class Npc extends Actor {
             this.distantPlayerYPos = false;
             this.distantPlayerYNeg = false;
         }
-        if (this.distantPlayerXPos == false || this.distantPlayerXPos == false || this.distantPlayerXPos == false || this.distantPlayerXPos == false)
+        if (this.distantPlayerXPos == false || this.distantPlayerXNeg == false || this.distantPlayerYPos == false || this.distantPlayerYNeg == false)
         {
             const dx = this.x - this.scene.player.x;
             const dy = this.y - this.scene.player.y;
             if (dx * dx + dy * dy < this.attackRange * this.attackRange) {
                 this.attackPossible = true;
+                //return;
                 /// Do action
+            } else {
+                console.log('npc toPlayer1');
+                //return;
             }
+        } else {
+            console.log('npc toPlayer2');
+            console.log(this.distantPlayerXPos + this.distantPlayerXPos + this.distantPlayerXPos + this.distantPlayerXPos);
+            //return;
         }
+        console.log('npc toPlayer3');
+        return;
         /*
         if (this.distantPlayerXPos == false && this.distantPlayerXNeg = false) {
             if ((this.scene.player.y - this.y) =< this.attackRange) {
@@ -168,30 +197,72 @@ export default class Npc extends Actor {
          */
     }
 
+    screenToIso(moveCase) {
+        console.log('npc moveCase');
+        if (moveCase == "plusPlus") { //>>
+            this.npcMove(this.scene.tileWidthHalf, this.scene.tileHeightHalf);
+        } else if (moveCase == "minusPlus") { //<>
+            this.npcMove(-this.scene.tileWidthHalf, this.scene.tileHeightHalf);
+        } else if (moveCase == "minusMinus") { //<<
+            this.npcMove(-this.scene.tileWidthHalf, -this.scene.tileHeightHalf);
+        } else if (moveCase == "plusMinus") { //><
+            this.npcMove(this.scene.tileWidthHalf, -this.scene.tileHeightHalf);
+        } else {
+            return;
+        }
+    }
+
+    npcMove(dx,dy)
+    {
+        console.log('npc move');
+        this.sprite.play(this.enemyType+'walk');
+        this.sprite.flipX = false;
+        this.scene.tweens.add({
+            targets: this.sprite,
+            x: this.sprite.x + dx,
+            y: this.sprite.y + dy,
+            duration: 1000,
+            delay: 0,
+        });
+        this.x += dx;
+        this.y += dy;
+        this.scene.time.addEvent({ delay: 1000, callback: function() {
+                this.sprite.play(this.enemyType+'idle');
+            }, callbackScope: this, loop: false });
+        this.comboString = "";
+    }
+
     update ()
     {
         // Update AI based movement of the NPC relative to the attacking player.
         if (this.activityPoints >= 1) {
+            this.relativeToPlayer();
             if (this.attackPossible == true) {
+                console.log(this.enemyType + index + 'can attack');
                 //do attack based on enemy type
                 //afterwards probably set attack possible to false, might require another variable
             } else {
+                console.log(this.enemyType + this.index + 'is trying to move');
                 if (this.enemyType == "thrall") {
                     if (this.distantPlayerXPos == true && this.distantPlayerYPos == true) { //>>
-                        this.x = this.x + 1;
-                        this.y = this.y + 1;
+                        //this.x = this.x + 1;
+                        //this.x = this.y + 1;
+                        this.screenToIso("plusPlus");
                         this.activityPoints = this.activityPoints - 1;
                     } else if (this.distantPlayerXNeg == true && this.distantPlayerYPos == true) {//<>
-                        this.x = this.x - 1;
-                        this.y = this.y + 1;
+                        //this.x = this.x - 1;
+                        //this.x = this.y + 1;
+                        this.screenToIso("minusPlus");
                         this.activityPoints = this.activityPoints - 1;
                     } else if (this.distantPlayerXNeg == true && this.distantPlayerYNeg == true) {//<<
-                        this.x = this.x - 1;
-                        this.y = this.y - 1;
+                        //this.x = this.x - 1;
+                        //this.x = this.y - 1;
+                        this.screenToIso("minusMinus");
                         this.activityPoints = this.activityPoints - 1;
                     } else if (this.distantPlayerXPos == true && this.distantPlayerYNeg == true) {//><
-                        this.x = this.x + 1;
-                        this.y = this.y - 1;
+                        //this.x = this.x + 1;
+                        //this.x = this.y - 1;
+                        this.screenToIso("plusMinus");
                         this.activityPoints = this.activityPoints - 1;
                     }
                     /*

@@ -171,8 +171,8 @@ export default class Bout extends Phaser.Scene {
           zoomIn: this.input.keyboard.addKey('Q'),
           zoomOut: this.input.keyboard.addKey('E'),
           acceleration: 0.06,
-          drag: 0.05,
-          maxSpeed: 10.0
+          drag: 0.005,
+          maxSpeed: 1.0
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
@@ -197,7 +197,7 @@ export default class Bout extends Phaser.Scene {
 		return tempPt;
 	}
 	
-	getTileCoordinatesFromCart(cartPt, tileHeight) {
+	getTileCoordinatesFromCart(cartPt) {
 		var tempPt=new Phaser.Point();
 		tempPt.x=Math.floor(cartPt.x/this.tileHeight);
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);

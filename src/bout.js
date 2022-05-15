@@ -18,7 +18,11 @@ export default class Bout extends Phaser.Scene {
         this.load.spritesheet('tiles', 'assets/map/iso-64x64-outside.png', {frameWidth: 64, frameHeight: 64});
 
         this.stewie = this.load.spritesheet('stewie', 'assets/character/people-preview.png', { frameWidth: 64, frameHeight: 96 });
-
+        this.bat = this.load.spritesheet('bat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		this.thrall = this.load.spritesheet('thrall', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		this.rat = this.load.spritesheet('rat', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		this.dracula = this.load.spritesheet('dracula', 'assets/character/bat.png', { frameWidth: 64, frameHeight: 96 });
+		
         /*this.load.image('sky', 'assets/sprites/sky.png');
 
         this.load.image('syllable-do','assets/hud/syllable-do.png');
@@ -26,7 +30,6 @@ export default class Bout extends Phaser.Scene {
         this.load.image('syllable-uhuh','assets/hud/syllable-uhuh.png');
         this.load.image('syllable-katta','assets/hud/syllable-katta.png');
 
-        this.stewie = this.load.spritesheet('stewie', 'assets/sprites/man.png', { frameWidth: 48, frameHeight: 48 });
         this.candy = this.load.spritesheet('candy', 'assets/sprites/woman.png', { frameWidth: 48, frameHeight: 48 });
 
         this.load.image('healthbar', 'assets/hud/healthbar.png');
@@ -128,10 +131,7 @@ export default class Bout extends Phaser.Scene {
         camX = camX + velocityX;
         camY = camY + velocityY;*/
 
-
-
         //this.cameras.main.setZoom();
-        //this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
         this.createAnim('stewie');
 
@@ -150,6 +150,7 @@ export default class Bout extends Phaser.Scene {
 		this.playerSprite = this.add.sprite(x,y);
 
 
+
         this.playerSprite.depth = 10000;
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
@@ -159,35 +160,31 @@ export default class Bout extends Phaser.Scene {
         var x=200;
         var y=400;
 
-        //x =
-
         var health=30;
 
-		/*
-			var x=16+(k/5)*10;
-			var y=16+(k%5)*10;
-			const tx = (x-y) * this.tileWidthHalf;
-			const ty = (x+y) * this.tileHeightHalf;
-		*/
-
         this.player = new Player({scene:this, sprite: this.playerSprite, x: x, y: y, health: health});
-		/*
+		
         x=600;
-        this.npc = new Npc({scene: this, sprite: this.npcSprite, x:x, y:y, health: health});
+		this.npcSprite = [this.add.sprite(x,y)];
+        this.npcSprite.depth = 10000;
+        this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:x, y:y, health: health, enemyType: 'thrall'})];
+		
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
-        if(this.npc.alive){
-          this.createAnim('candy');
+        if(this.npc[0].alive){
+          this.createAnim('thrall');
           this.npcSprite = this.add.sprite(600,400);
-          this.npcSprite.setScale(4);
-          this.npcSprite.play('candyidle');
+          //this.npcSprite.setScale(4);
+          this.npcSprite.play('thrallidle');
         }
 
         /*this.createSounds();*/
 
         this.player.create();
         //this.hud.create();
-        //this.npc.create();
+        this.npc.forEach(npc => {
+			npc.create();
+		});
     }
 
     buildMap(){
@@ -251,6 +248,7 @@ export default class Bout extends Phaser.Scene {
 
 
     createSounds() {
+		/*
         this.syllable1 = this.sound.add('1');
         this.syllable2 = this.sound.add('2');
         this.syllable3 = this.sound.add('3');
@@ -279,6 +277,7 @@ export default class Bout extends Phaser.Scene {
 
         this.womanWin = this.sound.add('womanwin');
         this.manWin = this.sound.add('manwin');
+		*/
     }
 
     showSyllable(syllable,pos) {
@@ -318,6 +317,9 @@ export default class Bout extends Phaser.Scene {
       }*/
       this.player.update();
       // Use actor for the animated figures.  Each player or npc has an actor.  This updates the player + npc.
+	  this.npc.forEach(npc => {
+		npc.update();
+	  });
       //this.hud.update();
     }
 

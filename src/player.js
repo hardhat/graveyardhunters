@@ -37,6 +37,7 @@ export default class Player extends Actor {
         console.log(posX + ", " + posY);
        //this.scene.worldToTileXY({x: posX, y: posY});*/
         console.log(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
+        this.scene.getTileXYType(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
       }, this);
       //console.log(this.scene.input.mousePointer.x);
       //console.log(this.scene.input.mousePointer.y);

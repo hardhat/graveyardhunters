@@ -5,10 +5,22 @@ import Npc from './npc.js'
 import Hud from './hud.js'
 
 // Shows level background.  Stretch goal: scroll side to side
+var path = [];
+var destination = new Phaser.Geom.Point(15,9);
+var isFindingPath = false;
+var tapPos = new Phaser.Geom.Point(0,0);
+var isWalking = false;
 
 export default class Bout extends Phaser.Scene {
     constructor () {
         super('Bout');
+        var borderOffset = new Phaser.Geom.Point(0,0);
+        this.isFindingPath = isFindingPath;
+        this.tapPos = tapPos;
+        this.isWalking =  isWalking;
+        this.borderOffset = borderOffset;
+        this.destination = destination;
+        this.path = path;
     }
 
     preload ()
@@ -46,18 +58,7 @@ export default class Bout extends Phaser.Scene {
         this.easystar.setAcceptableTiles([0]);
         this.easystar.disableCornerCutting();
 
-        var isFindingPath = false;
-        var tapPos = new Phaser.Geom.Point(0,0);
-        var isWalking = false;
-        var borderOffset = new Phaser.Geom.Point(0,0);
-        var path = [];
-        var destination = new Phaser.Geom.Point(15,9);
-        this.isFindingPath = isFindingPath;
-        this.tapPos = tapPos;
-        this.isWalking =  isWalking;
-        this.borderOffset = borderOffset;
-        this.destination = destination;
-        this.path = path;
+
 
 
         /*var velocityX = 0;
@@ -184,7 +185,7 @@ export default class Bout extends Phaser.Scene {
     this.tapPos = this.getTileCoordinatesFromCart(this.tapPos);
     console.log(this.tapPos.x + " " + this.tapPos.y);
     if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 32 && this.tapPos.y < 32){
-      if(this.layers[1][this.id] != 1){
+      if(this.layers[1][this.id] == 0){
         this.isFindingPath = true;
         this.easystar.findPath(playerPt.x, playerPt.y, this.tapPos.x, this.tapPos.y, this.plotAndMove);
         this.easystar.calculate();
@@ -193,25 +194,22 @@ export default class Bout extends Phaser.Scene {
     }
   }
   plotAndMove(newPath){
-  //var isFindingPath = false;
-
-    //this.destinatio
     console.log(newPath);
-    var path = newPath;
+    path = newPath;
     console.log(path);
-    //this.isFindingPath = false;
+    isFindingPath = false;
     if(path == null){
       console.log("no path found");
     } else {
-      path.push(this.tapPos);
+      path.push(tapPos);
       path.reverse();
       path.pop();
-      for(let i = 0; i < this.path.length; i++){
-        //var tmpSpr
-      }
+      console.log(path.length);
     }
   }
-
+  getPath(){
+    return path;
+  }
   screenPoint(posX, posY){//not needed anymore
     var screenPt = new Phaser.Geom.Point();
     screenPt.x = posX;

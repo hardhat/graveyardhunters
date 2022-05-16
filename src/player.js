@@ -19,6 +19,7 @@ export default class Player extends Actor {
       this.comboString = "";
       this.damage = 0;
       this.nextSfx = 0;
+      this.path = this.scene.getPath();
 
       this.scene.input.keyboard.on('keydown-W', k => this.patternMove(-this.scene.tileWidthHalf,-this.scene.tileHeightHalf), this);
       this.scene.input.keyboard.on('keydown-S', k => this.patternMove(this.scene.tileWidthHalf,this.scene.tileHeightHalf), this);
@@ -43,6 +44,8 @@ export default class Player extends Actor {
         console.log(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
         this.scene.getTileXYType(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(screenPt, 32)));
         this.scene.findPath(this.scene.getTileCoordinatesFromCart(this.scene.isometricToCartesian(playerPt, 32)));
+        console.log(this.path);
+        console.log(this.scene.destination);
       }, this);
       //console.log(this.scene.input.mousePointer.x);
       //console.log(this.scene.input.mousePointer.y);

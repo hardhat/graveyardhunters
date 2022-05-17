@@ -70,6 +70,7 @@ export default class Player extends Actor {
           return;
         }
       }
+      this.scene.isWalking = true;
       if(this.playerTilePt.x == this.scene.destination.x && this.playerTilePt.y == this.scene.destination.y){
         stepsTaken++;
         if(stepTaken < stepsTillTurn){
@@ -186,7 +187,7 @@ export default class Player extends Actor {
 
     update ()
     {
-		this.updatePatternHint()
+		this.updatePatternHint();
     this.aiWalk();
     }
 

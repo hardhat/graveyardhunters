@@ -7,29 +7,24 @@ export default class Npc extends Actor {
         super({scene,sprite,x,y,health});
         this.sprite = sprite;
         this.scene = scene;
-        this.x = x;
+        this.x = x;	// In cartesian
         this.y = y;
         this.alive = true;
         this.enemyType = enemyType;
-        this.attackRange = 1;
+        this.attackRange = 2;
         this.scene.npcText = [];
-        this.npcPoint = new Phaser.Geom.Point();
-        this.npcTilePoint = new Phaser.Geom.Point();
         this.addFancyText(375,300);
-
     }
 
     create(){
         this.scene.npcSprite.flipX = true;
-        this.npcPoint.x = this.x;
-        this.npcPoint.y = this.y;
-        this.npcTilePoint.x = this.sprite.x;
-        this.npcTilePoint.y = this.sprite.y;
-        this.distantPlayerXPos = true;
-        this.distantPlayerXNeg = true;
-        this.distantPlayerYPos = true;
-        this.distantPlayerYNeg = true;
-        this.activityPoints = 3;
+        //this.npcPoint.x = this.x;	// In cartesian
+        //this.npcPoint.y = this.y;
+        //this.npcTilePoint.x = this.sprite.x;	// In iso coords
+        //this.npcTilePoint.y = this.sprite.y;
+        this.dx = 0;
+	this.dy = 0;
+	this.direction = -1;
     }
 	
     createAnimBat(texture)
@@ -72,7 +67,7 @@ export default class Npc extends Actor {
             frameRate: 8,
         });
 
-        const keys = [ 'walk', 'idle', 'attack', 'die' ];
+        const keys = [ 'walk', 'walkN', 'idle', 'attack', 'die' ];
     }
 
     createAnimThrall(texture)
@@ -139,121 +134,53 @@ export default class Npc extends Actor {
         console.log(this.health);
         console.log(this.alive);
         this.scene.npcText[0].text = 'You Win';
-        this.scene.manWin.play();
+        //this.scene.manWin.play();
         //this.sprite.play('candydie');
       }
     }
 
-    relativeToPlayer(){
+    relativeToPlayer()
+    {
+	const h = this.scene.tileHeight; // Convert to tiles.
+	console.log("Tile Width: "+h);
 
-        /*
-        this.distantPlayerXPos; /n this.distantPlayerXPos; /n this.distantPlayerXPos; /n this.distantPlayerXPos;
-        this.distantPlayerXPos = new boolean;
-        this.distantPlayerXNeg = new boolean;
-        this.distantPlayerYPos = new boolean;
-        this.distantPlayerYNeg = new boolean;
-         */
-        if (this.scene.player.x > this.x) {
-            this.distantPlayerXPos = true;
-        } else if (this.scene.player.x < this.x) {
-            this.distantPlayerXNeg = true;
-        } else {
-            this.distantPlayerXPos = false;
-            this.distantPlayerXNeg = false;
-        }
-        if (this.scene.player.y > this.y) {
-            this.distantPlayerYPos = true;
-        } else if (this.scene.player.y < this.y) {
-            this.distantPlayerYNeg = true;
-        } else {
-            this.distantPlayerYPos = false;
-            this.distantPlayerYNeg = false;
-        }
-        if (this.distantPlayerXPos == false || this.distantPlayerXNeg == false || this.distantPlayerYPos == false || this.distantPlayerYNeg == false)
-        {
-            /*
-            const dx = this.x - this.scene.player.x;
-            const dy = this.y - this.scene.player.y;
-            */
-            this.dx = this.x - this.scene.player.x;
-            this.dy = this.y - this.scene.player.y;
-            if (this.dx*this.dx >= this.dy*this.dy) {
-                this.horizDistanceGreater = true
-                this.vertiDistanceGreater = false
-            } else {
-                this.vertiDistanceGreater = true
-                this.horizDistanceGreater = false
-            }
-            if (this.dx * this.dx + this.dy * this.dy < this.attackRange * this.attackRange) {
-                this.attackPossible = true;
-                //return;
-                /// Do action
-            } else {
-                console.log('npc toPlayer1');
-                //return;
-            }
-        } else {
-            console.log('npc toPlayer2');
-            console.log(this.distantPlayerXPos + this.distantPlayerXPos + this.distantPlayerXPos + this.distantPlayerXPos);
-            //return;
-        }
-        console.log('npc toPlayer3');
-        return;
-        /*
-        if (this.distantPlayerXPos == false && this.distantPlayerXNeg = false) {
-            if ((this.scene.player.y - this.y) =< this.attackRange) {
-                this.attackPossible = true;
-            }
-        }
-         */
-    }
+        this.dx = Math.floor(this.scene.player.x/h) - Math.floor(this.x/h);	// Vector towards player
+        this.dy = Math.floor(this.scene.player.y/h) - Math.floor(this.y/h);
 
-    screenToIso(moveCase) {
-        console.log('npc moveCase');
-        if (this.horizDistanceGreater == true) {
-            if (this.dx>=0) {
-                this.npcMove(-this.scene.tileWidthHalf, 0);
-            } else {
-                this.npcMove(this.scene.tileWidthHalf, 0);
-            }
-        } else {
-            if (this.dy >= 0) {
-                this.npcMove(0, -this.scene.tileHeightHalf);
-            } else {
-                this.npcMove(0, this.scene.tileHeightHalf);
-            }
-        }
-        /*
-        if (moveCase == "plusPlus") { //>>
-            this.npcMove(this.scene.tileWidthHalf, this.scene.tileHeightHalf);
-        } else if (moveCase == "minusPlus") { //<>
-            this.npcMove(-this.scene.tileWidthHalf, this.scene.tileHeightHalf);
-        } else if (moveCase == "minusMinus") { //<<
-            this.npcMove(-this.scene.tileWidthHalf, -this.scene.tileHeightHalf);
-        } else if (moveCase == "plusMinus") { //><
-            this.npcMove(this.scene.tileWidthHalf, -this.scene.tileHeightHalf);
-        } else {
-            return;
-        }
-        */
+        const delta = this.dx * this.dx + this.dy * this.dy;
+	this.attackPossible = delta < this.attackRange * this.attackRange;
+        return this.attackPossible;
     }
 
     npcMove(dx,dy)
     {
-        console.log('npc move');
-        this.sprite.play(this.enemyType+'walk');
-        this.sprite.flipX = false;
+	const h = this.tileHeight;
+	const anim = this.enemyType+'walk'+(dy<0?'N':'');
+        console.log('npc move '+dx+','+dy+': '+anim + ' facing '+(dx<=0?'left':'right'));
+        this.sprite.play(anim);
+        this.sprite.flipX = dx<=0;
+	const tileX = Math.floor(this.x/h);
+	const tileY = Math.floor(this.y/h);
+	let stepX = dx==0?0:dx<0?-1:1;
+	let stepY = dy==0?0:dy<0?-1:1;
+	if(stepX!=0 && stepY!=0) {
+		if(Math.random()>0.5) stepX=0; else stepY=0;
+	}
+	const newX = (tileX+stepX)*h;
+	const newY = (tileY+stepY)*h;
+	const targetPt = this.scene.cartesianToIsometric(new Phaser.Geom.Point(newX,newY));
         this.scene.tweens.add({
             targets: this.sprite,
-            x: this.sprite.x + dx,
-            y: this.sprite.y + dy,
+            x: targetPt.x,
+            y: targetPt.y,
             duration: 1000,
             delay: 0,
         });
-        this.x += dx;
-        this.y += dy;
+        this.x = newX;
+        this.y = newY;
         this.scene.time.addEvent({ delay: 1000, callback: function() {
                 this.sprite.play(this.enemyType+'idle');
+		//this.activityPoints++;
             }, callbackScope: this, loop: false });
         this.comboString = "";
     }
@@ -262,52 +189,24 @@ export default class Npc extends Actor {
     {
         // Update AI based movement of the NPC relative to the attacking player.
         if (this.activityPoints >= 1) {
+            this.activityPoints = 0;
             this.relativeToPlayer();
             if (this.attackPossible == true) {
                 console.log(this.enemyType + index + 'can attack');
                 //do attack based on enemy type
                 //afterwards probably set attack possible to false, might require another variable
             } else {
-                console.log(this.enemyType + this.index + 'is trying to move');
+                console.log(this.enemyType + this.index + 'is trying to move to '+this.dx+','+this.dy);
                 if (this.enemyType == "thrall") {
-                    this.screenToIso();
-                    if (this.distantPlayerXPos == true && this.distantPlayerYPos == true) { //>>
-                        //this.x = this.x + 1;
-                        //this.x = this.y + 1;
-                        this.screenToIso("plusPlus");
-                        this.activityPoints = this.activityPoints - 1;
-                    } else if (this.distantPlayerXNeg == true && this.distantPlayerYPos == true) {//<>
-                        //this.x = this.x - 1;
-                        //this.x = this.y + 1;
-                        this.screenToIso("minusPlus");
-                        this.activityPoints = this.activityPoints - 1;
-                    } else if (this.distantPlayerXNeg == true && this.distantPlayerYNeg == true) {//<<
-                        //this.x = this.x - 1;
-                        //this.x = this.y - 1;
-                        this.screenToIso("minusMinus");
-                        this.activityPoints = this.activityPoints - 1;
-                    } else if (this.distantPlayerXPos == true && this.distantPlayerYNeg == true) {//><
-                        //this.x = this.x + 1;
-                        //this.x = this.y - 1;
-                        this.screenToIso("plusMinus");
-                        this.activityPoints = this.activityPoints - 1;
-                    }
-                    /*
-                    if (this.distantPlayerYPos == false && this.distantPlayerYNeg == false) {
-
-                    } else if (this.distantPlayerXPos == false && this.distantPlayerXNeg == false) {
-
-                    }
-                     */
+                    this.npcMove(this.dx,this.dy);
                 } else if (this.enemyType == "rat") {
 
                 } else if (this.enemyType == "bat") {
-                    this.screenToIso();
+                    this.npcMove(this.dx,this.dt);
                 } else if (this.enemyType == "dracula") {
 
                 }
             }
         }
-        return
     }
 }

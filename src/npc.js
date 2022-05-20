@@ -17,7 +17,7 @@ export default class Npc extends Actor {
     }
 
     create(){
-        this.scene.npcSprite.flipX = true;
+        this.sprite.flipX = true;
         //this.npcPoint.x = this.x;	// In cartesian
         //this.npcPoint.y = this.y;
         //this.npcTilePoint.x = this.sprite.x;	// In iso coords
@@ -141,31 +141,34 @@ export default class Npc extends Actor {
 
     relativeToPlayer()
     {
-	const h = this.scene.tileHeight; // Convert to tiles.
-	console.log("Tile Width: "+h);
+        const h = this.scene.tileHeight; // Convert to tiles.
 
         this.dx = Math.floor(this.scene.player.x/h) - Math.floor(this.x/h);	// Vector towards player
         this.dy = Math.floor(this.scene.player.y/h) - Math.floor(this.y/h);
 
         const delta = this.dx * this.dx + this.dy * this.dy;
-	this.attackPossible = delta < this.attackRange * this.attackRange;
+        this.attackPossible = delta < this.attackRange * this.attackRange;
         return this.attackPossible;
     }
 
     npcMove(dx,dy)
     {
-	const h = this.tileHeight;
-	const anim = this.enemyType+'walk'+(dy<0?'N':'');
-        console.log('npc move '+dx+','+dy+': '+anim + ' facing '+(dx<=0?'left':'right'));
-        this.sprite.play(anim);
-        this.sprite.flipX = dx<=0;
-	const tileX = Math.floor(this.x/h);
-	const tileY = Math.floor(this.y/h);
+	const h = this.scene.tileHeight;
+
+	// What step have we settled on
 	let stepX = dx==0?0:dx<0?-1:1;
 	let stepY = dy==0?0:dy<0?-1:1;
 	if(stepX!=0 && stepY!=0) {
 		if(Math.random()>0.5) stepX=0; else stepY=0;
 	}
+
+	const anim = this.enemyType+'walk'+(stepX<0?'N':'');
+	console.log('npc move '+dx+','+dy+': '+anim + ' facing '+(dx>=0?'left':'right'));
+	this.sprite.play(anim);
+	this.sprite.flipX = !((stepY>0));
+	const tileX = Math.floor(this.x/h);
+	const tileY = Math.floor(this.y/h);
+	console.log(this.enemyType + ": Taking a step to "+stepX+","+stepY+" -> "+(tileX+stepX)+","+(tileY+stepY));
 	const newX = (tileX+stepX)*h;
 	const newY = (tileY+stepY)*h;
 	const targetPt = this.scene.cartesianToIsometric(new Phaser.Geom.Point(newX,newY));
@@ -180,7 +183,8 @@ export default class Npc extends Actor {
         this.y = newY;
         this.scene.time.addEvent({ delay: 1000, callback: function() {
                 this.sprite.play(this.enemyType+'idle');
-		//this.activityPoints++;
+				console.log(this.enemyType + " earned a activity point.");
+				this.activityPoints++;
             }, callbackScope: this, loop: false });
         this.comboString = "";
     }
@@ -192,17 +196,17 @@ export default class Npc extends Actor {
             this.activityPoints = 0;
             this.relativeToPlayer();
             if (this.attackPossible == true) {
-                console.log(this.enemyType + index + 'can attack');
+                console.log(this.enemyType + ' can attack');
                 //do attack based on enemy type
                 //afterwards probably set attack possible to false, might require another variable
             } else {
-                console.log(this.enemyType + this.index + 'is trying to move to '+this.dx+','+this.dy);
+                console.log(this.enemyType + ' is trying to move to '+this.dx+','+this.dy);
                 if (this.enemyType == "thrall") {
                     this.npcMove(this.dx,this.dy);
                 } else if (this.enemyType == "rat") {
 
                 } else if (this.enemyType == "bat") {
-                    this.npcMove(this.dx,this.dt);
+                    this.npcMove(this.dx,this.dy);
                 } else if (this.enemyType == "dracula") {
 
                 }

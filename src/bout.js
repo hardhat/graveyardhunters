@@ -83,9 +83,9 @@ export default class Bout extends Phaser.Scene {
 
 		var x=this.centerX + 200;
 		var y=this.centerY + 400;
-		var cart = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-		var tile = this.getTileCordinatesFromCart(cart);
-		console.log("200, 400 -> iso "+x+","+y+" -> cart "+cart.x+","+cart.y+" -> tile "+tile.x+","+tile.y);
+		var cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
+		var tilePt = this.getTileCoordinatesFromCart(cartPt);
+		console.log("Player "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
 		this.playerSprite = this.add.sprite(x,y);
         this.playerSprite.depth = 10000;
@@ -93,25 +93,28 @@ export default class Bout extends Phaser.Scene {
 		//this.playerSprite.setScale(4);
         this.playerSprite.flipX = true;
         var health=30;
-        this.player = new Player({scene:this, sprite: this.playerSprite, x: cart.x, y: cart.y, health: health});
+        this.player = new Player({scene:this, sprite: this.playerSprite, x: cartPt.x, y: cartPt.y, health: health});
         this.player.createAnim('stewie');
         this.playerSprite.play('stewieidle');
 
         x=600;
-	cart = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-	tile = this.carteseanToTile(cart);
+	cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
+	tilePt = this.getTileCoordinatesFromCart(cartPt);
 	this.npcSprite = [this.add.sprite(x,y)];
         this.npcSprite[0].depth = 10000;
-        this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:cart.x, y:cart.y, health: health, enemyType: 'thrall'})];
+        this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
         this.npc[0].activityPoints=3;
+		console.log("Thrall "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
         x=500; y-=64;
 	this.npcSprite.push(this.add.sprite(x,y));
-	cart = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-	tile = this.carteseanToTile(cart);
+	cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
+	tilePt = this.getTileCoordinatesFromCart(cartPt);
         this.npcSprite[1].depth = 10000;
-        this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:cart.x, y:cart.y, health: health, enemyType: 'bat'}));
+        this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'bat'}));
+		console.log("Bat "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
+        this.npc[1].activityPoints=3;
 
 
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});

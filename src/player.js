@@ -9,8 +9,6 @@ export default class Player extends Actor {
         this.scene = scene;
         this.x = x;	// in cartesian coords
         this.y = y;
-        this.scene.playerText = [];
-        this.addFancyText1(300,300);
         this.activityPoints=1;
         this.walkingPath=false;
         this.walkActive=false;
@@ -54,7 +52,10 @@ export default class Player extends Actor {
       //this.scene.bout.worldToTileXY(this.scene.input.mousePointer.x, this.scene.input.mousePointer.y);
 
 
+      this.scene.playerText = [this.addFancyText1(300,300)];
       this.createPaternHint();
+	  this.scene.container.add(this.scene.playerText);
+	  this.scene.container.add(this.scene.hintText);
     }
     aiWalk(){
       const tilePt = this.scene.cartesianToTile(new Phaser.Geom.Point(this.x, this.y));
@@ -181,8 +182,8 @@ export default class Player extends Actor {
         this.scene.time.addEvent({ delay: 1000, callback: function() {
                 this.sprite.play('stewieidle');
 				console.log("Player earned a activity point.");
-				this.activityPoints++;
 				this.walkActive=false;
+				this.scene.endOfTurn();
             }, callbackScope: this, loop: false });
     }
 
@@ -194,6 +195,7 @@ export default class Player extends Actor {
         this.scene.manFight[(this.nextSfx++)%5].play();
         this.comboString = "";
         this.scene.time.addEvent({ delay: 1000, callback: function() {
+			this.scene.endOfTurn();
             this.sprite.play('stewieidle');
         }, callbackScope: this, loop: false });
     }
@@ -208,7 +210,7 @@ export default class Player extends Actor {
     {
         this.scene.hintText = [];
         for(var i=0; i<6; i++) {
-            this.addFancyText(550,100+i*24);
+            this.scene.hintText.push(this.addFancyText(550,100+i*24));
         }
     }
 
@@ -217,7 +219,7 @@ export default class Player extends Actor {
 		text.depth = 10000;
         text.setStroke('#00f', 5);
         text.setShadow(2,2,'#333333',2,true,true);
-        this.scene.hintText.push(text);
+        return text;
     }
 
     addFancyText1(x,y) {
@@ -225,7 +227,7 @@ export default class Player extends Actor {
 		text.depth = 10000;
         text.setStroke('#00f', 5);
         text.setShadow(2,2,'#333333',2,true,true);
-        this.scene.playerText.push(text);
+        return text;
     }
 
     updatePatternHint()

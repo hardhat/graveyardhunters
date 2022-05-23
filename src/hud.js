@@ -19,13 +19,15 @@ export default class Hud extends Phaser.GameObjects.Group {
         //this.score.pts = int;
         //this.score.pts = 0;
         this.scoreLabel = 'Score: ';
-        this.scene.hudText = [];
-        this.addFancyText(150,30);
-        this.addFancyText(500,30);
-        this.addFancyText(150,5);
-        this.addFancyText(500,5);
-        this.scene.hudText[2].text='Player: Candy';
-        this.scene.hudText[3].text='Enemy: Stewie';
+        this.scene.hudText = [
+			this.addFancyText(150,30),
+			this.addFancyText(500,30),
+			this.addFancyText(150,5),
+			this.addFancyText(500,5)
+		];
+        this.scene.hudText[2].text='Player: ';
+        this.scene.hudText[3].text='Enemy: ';
+		this.scene.container.add(this.scene.hudText);	// In UI layer.
     }
 
     update ()
@@ -38,7 +40,7 @@ export default class Hud extends Phaser.GameObjects.Group {
         var text = this.scene.add.text(x,y,'',{font: "20px Arial Black", fill: "#fff"});
         text.setStroke('#00f', 5);
         text.setShadow(2,2,'#333333',2,true,true);
-        this.scene.hudText.push(text);
+        return text;
     }
 
     updateHealth ()
@@ -46,7 +48,14 @@ export default class Hud extends Phaser.GameObjects.Group {
         /*this.healthbar.crop(new Phaser.Rectangle(0, 0, (this.player.health / this.player.maxHealth) * this.width, 10));
         this.healthbar.updateCrop();*/
         this.scene.hudText[0].text = '' + this.player.health + '/' + this.player.maxHealth;
-        this.scene.hudText[1].text = '' + this.npc.health + '/' + this.npc.maxHealth;
+		if(this.scene.whoseTurn!=-1) {
+			const w=this.scene.whoseTurn;
+			this.scene.hudText[3].text='Enemy: '+this.npc[w].enemyType;
+			this.scene.hudText[1].text = '' + this.npc[w].health + '/' + this.npc[w].maxHealth;
+		} else {
+			this.scene.hudText[3].text='Enemy: ';
+			this.scene.hudText[1].text = '';
+		}
     }
 
     updateScore(amount)

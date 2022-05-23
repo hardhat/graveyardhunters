@@ -12,19 +12,15 @@ export default class Npc extends Actor {
         this.alive = true;
         this.enemyType = enemyType;
         this.attackRange = 2;
-        this.scene.npcText = [];
-        this.addFancyText(375,300);
+        this.scene.npcText = [this.addFancyText(375,300)];
+		this.scene.container.add(this.scene.npcText);	// In UI layer.
     }
 
     create(){
         this.sprite.flipX = true;
-        //this.npcPoint.x = this.x;	// In cartesian
-        //this.npcPoint.y = this.y;
-        //this.npcTilePoint.x = this.sprite.x;	// In iso coords
-        //this.npcTilePoint.y = this.sprite.y;
         this.dx = 0;
-	this.dy = 0;
-	this.direction = -1;
+        this.dy = 0;
+        this.direction = -1;
     }
 	
     createAnimBat(texture)
@@ -125,7 +121,7 @@ export default class Npc extends Actor {
         var text = this.scene.add.text(x,y,'',{font: "20px Arial Black", fill: "#fff"});
         text.setStroke('#00f', 5);
         text.setShadow(2,2,'#333333',2,true,true);
-        this.scene.npcText.push(text);
+        return text;
     }
 
     isAlive(){

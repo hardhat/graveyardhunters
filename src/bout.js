@@ -21,6 +21,7 @@ export default class Bout extends Phaser.Scene {
         this.borderOffset = borderOffset;
         this.destination = destination;
         this.path = path;
+		this.whoseTurn = -1;
     }
 
     preload ()
@@ -48,6 +49,10 @@ export default class Bout extends Phaser.Scene {
 
     create ()
     {
+		this.UICamera = this.cameras.add(0,0,800,600);
+		this.container = this.add.container();
+		this.playfield = this.add.container();
+		
         //scene = this;
         this.buildMap();
 
@@ -93,6 +98,7 @@ export default class Bout extends Phaser.Scene {
         this.player = new Player({scene:this, sprite: this.playerSprite, x: cartPt.x, y: cartPt.y, health: health});
         this.player.createAnim('stewie');
         this.playerSprite.play('stewieidle');
+		this.playfield.add(this.playerSprite);
 
         x=600;
         cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
@@ -102,6 +108,7 @@ export default class Bout extends Phaser.Scene {
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
         this.npc[0].activityPoints=3;
+		this.playfield.add(this.npcSprite[0]);
 		console.log("Thrall "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
         x=500; y-=64;
@@ -110,11 +117,10 @@ export default class Bout extends Phaser.Scene {
         tilePt = this.cartesianToTile(cartPt);
         this.npcSprite[1].depth = 10000;
         this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'bat'}));
+		this.playfield.add(this.npcSprite[1]);
 		console.log("Bat "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
         this.npc[1].activityPoints=3;
 
-
-        this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
         console.log("is npc [0] alive:" + this.npc[0].alive);
         if(this.npc[0].alive){
@@ -152,10 +158,12 @@ export default class Bout extends Phaser.Scene {
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         this.player.create();
-        //this.hud.create();
+        this.hud.create();
         this.npc.forEach(npc => {
 			npc.create();
 		});
+		this.cameras.main.ignore(this.container);
+		this.UICamera.ignore(this.playfield);
     }
 
   listToMatrix(list, elementPerSubArray){
@@ -310,6 +318,7 @@ export default class Bout extends Phaser.Scene {
             const ty = (x+y) * tileHeightHalf;
             if(id != -1){
 				const tile = scene.add.image(centerX + tx, centerY + ty, 'tiles', id);
+				this.playfield.add(tile);
 
 				tile.depth = centerY + ty;
             }
@@ -349,6 +358,30 @@ export default class Bout extends Phaser.Scene {
         }, callbackScope: this, loop: false });
     }
 
+	endOfTurn()
+	{
+		// player or enemy calls this when their activity points are used up.
+		this.whoseTurn++;
+
+		while(this.whoseTurn>-1 && this.whoseTurn<this.npc.length) {
+			if(this.npc[this.whoseTurn].isAlive()) {
+				this.npc[this.whoseTurn].activityPoints=1;
+				break;
+			}
+			this.whoseTurn++;	// Try again
+		}
+		if(this.whoseTurn>=this.npc.length) {
+			this.whoseTurn=-1;
+		}
+		
+		if(this.whoseTurn==-1) {
+			if(this.player.isAlive()) {
+				this.player.activityPoints=1;
+			}
+			// Could cull dead enemies here.
+		}
+	}
+
     update ()
     {
       this.controls.update();
@@ -358,7 +391,7 @@ export default class Bout extends Phaser.Scene {
 	  this.npc.forEach(npc => {
 		npc.update();
 	  });
-      //this.hud.update();
+      this.hud.update();
     }
 
 }

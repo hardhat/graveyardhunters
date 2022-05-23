@@ -361,11 +361,14 @@ export default class Bout extends Phaser.Scene {
 	endOfTurn()
 	{
 		// player or enemy calls this when their activity points are used up.
+		console.log("end of turn for "+(this.whoseTurn==-1?"player":"enemy "+this.whoseTurn));
 		this.whoseTurn++;
 
 		while(this.whoseTurn>-1 && this.whoseTurn<this.npc.length) {
+			console.log("Testing enemy "+this.whoseTurn+"; is alive?"+this.npc[this.whoseTurn].isAlive());
 			if(this.npc[this.whoseTurn].isAlive()) {
 				this.npc[this.whoseTurn].activityPoints=1;
+				console.log(this.npc[this.whoseTurn].enemyType+" "+this.whoseTurn+" earned an activity point");
 				break;
 			}
 			this.whoseTurn++;	// Try again
@@ -376,10 +379,13 @@ export default class Bout extends Phaser.Scene {
 		
 		if(this.whoseTurn==-1) {
 			if(this.player.isAlive()) {
+				console.log("Player earned an activity point");
 				this.player.activityPoints=1;
 			}
 			// Could cull dead enemies here.
 		}
+		console.log("Active becomes "+(this.whoseTurn==-1?"player":"enemy "+this.whoseTurn));
+		
 	}
 
     update ()

@@ -126,25 +126,15 @@ export default class Player extends Actor {
         console.log(this.scene.npc[i].health);
     }
 
-//     playerMove(dx,dy)
-//     {
-//         console.log('move');
-//         this.sprite.play('stewiewalk');
-//         this.sprite.flipX = false;
-//         this.scene.tweens.add({
-//             targets: this.sprite,
-//             x: this.sprite.x + dx,
-// 			y: this.sprite.y + dy,
-//             duration: 1000,
-//             delay: 0,
-//         });
-//         this.x += dx;
-//         this.y += dy;
-//         this.scene.time.addEvent({ delay: 1000, callback: function() {
-//             this.sprite.play('stewieidle');
-//         }, callbackScope: this, loop: false });
-//         this.comboString = "";
-//     }
+    isAlive(){
+      if(this.health <= 0){
+        this.alive = false;
+        console.log(this.health);
+        console.log(this.alive);
+        this.scene.npcText[0].text = 'You Lose';
+      }
+	  return this.health>0;
+    }
 
     playerMove(dx,dy)
     {
@@ -181,7 +171,6 @@ export default class Player extends Actor {
         this.y = newPt.y;
         this.scene.time.addEvent({ delay: 1000, callback: function() {
                 this.sprite.play('stewieidle');
-				console.log("Player earned a activity point.");
 				this.walkActive=false;
 				this.scene.endOfTurn();
             }, callbackScope: this, loop: false });

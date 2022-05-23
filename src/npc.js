@@ -12,8 +12,6 @@ export default class Npc extends Actor {
         this.alive = true;
         this.enemyType = enemyType;
         this.attackRange = 2;
-        this.scene.npcText = [this.addFancyText(375,300)];
-		this.scene.container.add(this.scene.npcText);	// In UI layer.
     }
 
     create(){
@@ -21,6 +19,8 @@ export default class Npc extends Actor {
         this.dx = 0;
         this.dy = 0;
         this.direction = -1;
+        this.scene.npcText = [this.addFancyText(375,300)];
+		this.scene.container.add(this.scene.npcText);	// In UI layer.
     }
 	
     createAnimBat(texture)
@@ -130,9 +130,8 @@ export default class Npc extends Actor {
         console.log(this.health);
         console.log(this.alive);
         this.scene.npcText[0].text = 'You Win';
-        //this.scene.manWin.play();
-        //this.sprite.play('candydie');
       }
+	  return this.health>0;
     }
 
     relativeToPlayer()
@@ -179,9 +178,20 @@ export default class Npc extends Actor {
         this.scene.time.addEvent({ delay: 1000, callback: function() {
                 this.sprite.play(this.enemyType+'idle');
 				console.log(this.enemyType + " earned a activity point.");
-				this.activityPoints++;
+				this.scene.endOfTurn();
             }, callbackScope: this, loop: false });
     }
+	
+	attack()
+	{
+		this.scene.npcText[0].text=this.enemyType + ': attacking for 0 damage.';
+		this.scene.time.addEvent({ delay: 1000, callback: function() {
+			this.sprite.play(this.enemyType+'idle');
+			console.log(this.enemyType + " earned a activity point.");
+			this.scene.npcText[0].text='';
+			this.scene.endOfTurn();
+		}, callbackScope: this, loop: false });		
+	}
 
     update ()
     {
@@ -193,17 +203,22 @@ export default class Npc extends Actor {
                 console.log(this.enemyType + ' can attack');
                 //do attack based on enemy type
                 //afterwards probably set attack possible to false, might require another variable
+				this.attack();
             } else {
                 console.log(this.enemyType + ' is trying to move to '+this.dx+','+this.dy);
                 if (this.enemyType == "thrall") {
                     this.npcMove(this.dx,this.dy);
                 } else if (this.enemyType == "rat") {
-
+					// Instead of passing turn after an animation, we end the turn immediately
+					this.scsne.endOfTurn();
                 } else if (this.enemyType == "bat") {
                     this.npcMove(this.dx,this.dy);
                 } else if (this.enemyType == "dracula") {
-
-                }
+					// Instead of passing turn after an animation, we end the turn immediately
+					this.scene.endOfTurn();
+                } else {
+					this.scene.endOfTurn();					
+				}
             }
         }
     }

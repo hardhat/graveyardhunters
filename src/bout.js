@@ -58,9 +58,6 @@ export default class Bout extends Phaser.Scene {
         this.easystar.setAcceptableTiles([0]);
         this.easystar.disableCornerCutting();
 
-
-
-
         /*var velocityX = 0;
         var velocityY = 0;*/
         /*var keys = this.input.keyboard.addKeys('W,S,A,D,LEFT,RIGHT,UP,DOWN');
@@ -84,7 +81,7 @@ export default class Bout extends Phaser.Scene {
 		var x=this.centerX + 200;
 		var y=this.centerY + 400;
 		var cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-		var tilePt = this.getTileCoordinatesFromCart(cartPt);
+		var tilePt = this.cartesianToTile(cartPt);
 		console.log("Player "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
 		this.playerSprite = this.add.sprite(x,y);
@@ -98,9 +95,9 @@ export default class Bout extends Phaser.Scene {
         this.playerSprite.play('stewieidle');
 
         x=600;
-	cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-	tilePt = this.getTileCoordinatesFromCart(cartPt);
-	this.npcSprite = [this.add.sprite(x,y)];
+        cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
+        tilePt = this.cartesianToTile(cartPt);
+        this.npcSprite = [this.add.sprite(x,y)];
         this.npcSprite[0].depth = 10000;
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
@@ -108,9 +105,9 @@ export default class Bout extends Phaser.Scene {
 		console.log("Thrall "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
         x=500; y-=64;
-	this.npcSprite.push(this.add.sprite(x,y));
-	cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
-	tilePt = this.getTileCoordinatesFromCart(cartPt);
+        this.npcSprite.push(this.add.sprite(x,y));
+        cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
+        tilePt = this.cartesianToTile(cartPt);
         this.npcSprite[1].depth = 10000;
         this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'bat'}));
 		console.log("Bat "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
@@ -130,7 +127,7 @@ export default class Bout extends Phaser.Scene {
         this.hud = new Hud({scene: this, player: this.player, npc: this.npc});
 
 
-        /*this.createSounds();*/
+        /* this.createSounds(); */
         var camX = x;
         var camY = y;
         this.cameras.main.setSize(1600, 1200);
@@ -172,25 +169,13 @@ export default class Bout extends Phaser.Scene {
     }
     return matrix;
   }
-  findPath(playerPt){
-    var playerMapTile = new Phaser.Geom.Point();
-    playerMapTile = playerPt;
-    console.log(this.id);
-    console.log(playerPt.x + " " + playerPt.y);
-    if(this.isFindingPath || this.isWalking)return;
-    var posX = this.input.mousePointer.worldX;
-    var posY = this.input.mousePointer.worldY;
-    console.log(posX + " " + posY);
-    var isoPt = new Phaser.Geom.Point(posX - 0, posY - 0);
-    this.tapPos = this.isometricToCartesian(isoPt);
-    this.tapPos.x -= this.tileWidthHalf;
-    this.tapPos.y += this.tileWidthHalf;
-    this.tapPos = this.getTileCoordinatesFromCart(this.tapPos);
-    console.log(this.tapPos.x + " " + this.tapPos.y);
-    if(this.tapPos.x > -1 && this.tapPos.y > -1 && this.tapPos.x < 32 && this.tapPos.y < 32){
+  findTilePath(startPt,destPt){	// Note all parameters are in tile coords.
+    if(this.isFindingPath || this.isWalking) return;
+
+    if(destPt.x > -1 && destPt.y > -1 && destPt.x < this.tilesacross && destPt.y < this.tilesdown){
       if(this.layers[1][this.id] == 0){
         this.isFindingPath = true;
-        this.easystar.findPath(playerPt.x, playerPt.y, this.tapPos.x, this.tapPos.y, this.plotAndMove);
+        this.easystar.findPath(startPt.x, startPt.y, this.destPos.x, this.destPos.y, this.plotAndMove);
         this.easystar.calculate();
         console.log("made path");
       }
@@ -234,10 +219,17 @@ export default class Bout extends Phaser.Scene {
 		return tempPt;
 	}
 
-	getTileCoordinatesFromCart(cartPt) {
+	cartesianToTile(cartPt) {
 		var tempPt=new Phaser.Geom.Point();
 		tempPt.x=Math.floor(cartPt.x/this.tileHeight);
 		tempPt.y=Math.floor(cartPt.y/this.tileHeight);
+		return tempPt;
+	}
+	
+	tileToCartesian(tilePt) {
+		var tempPt=new Phaser.Geom.Point();
+		tempPt.x=(tilePt.x+0.5) * this.tileHeight;
+		tempPt.y=(tilePt.y+0.5) * this.tileHeight;
 		return tempPt;
 	}
 
@@ -246,14 +238,25 @@ export default class Bout extends Phaser.Scene {
 		var y = pt.y;
 		var id;
 		id = (y * this.mapacross) + x;
-    this.id = id;
-		console.log(id);
-		if(this.layers[1][id] != 0){
-		  console.log("it worked, rock");
-		} else{
-		    console.log("movable");
-      }
+        this.id = id;
+        // Note layer 0 is grass and always passable.
+		if(this.layers[1][id] != 0){	// Blocked by rock, bush, etc.
+		  return this.layers[1][id];
+		}
+		// Note layer 2 is tops of trees, and not a barrier.
+		if(this.layers[3][id] != 0){
+          return "stick";
+        }
+        if(this.layers[4][id] != 0){
+          return "water";
+        }
+        return 0;
     }
+
+	//  .X.
+	//  PX.
+	//  ...
+	//  XT.
 
     buildMap(){
       var scene = this

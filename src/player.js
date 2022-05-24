@@ -191,6 +191,7 @@ export default class Player extends Actor {
 
     update ()
     {
+	    this.sprite.setDepth(this.sprite.y);
 		this.updatePatternHint();
 		this.aiWalk();
     }

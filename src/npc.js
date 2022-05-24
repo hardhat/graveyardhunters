@@ -195,6 +195,7 @@ export default class Npc extends Actor {
 
     update ()
     {
+	this.sprite.setDepth(this.sprite.y);
         // Update AI based movement of the NPC relative to the attacking player.
         if (this.activityPoints >= 1) {
             this.activityPoints = 0;

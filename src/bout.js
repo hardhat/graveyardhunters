@@ -21,7 +21,7 @@ export default class Bout extends Phaser.Scene {
         this.borderOffset = borderOffset;
         this.destination = destination;
         this.path = path;
-		this.whoseTurn = -1;
+        this.whoseTurn = -1;
     }
 
     preload ()
@@ -90,7 +90,7 @@ export default class Bout extends Phaser.Scene {
 		console.log("Player "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
 
 		this.playerSprite = this.add.sprite(x,y);
-        this.playerSprite.depth = 10000;
+        this.playerSprite.setDepth(10000);
 		console.log("The player sprite depth is " + this.playerSprite.depth);
 		//this.playerSprite.setScale(4);
         this.playerSprite.flipX = true;
@@ -104,7 +104,7 @@ export default class Bout extends Phaser.Scene {
         cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
         tilePt = this.cartesianToTile(cartPt);
         this.npcSprite = [this.add.sprite(x,y)];
-        this.npcSprite[0].depth = 10000;
+        this.npcSprite[0].setDepth(10000);
         this.npc = [new Npc({scene: this, sprite: this.npcSprite[0], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'thrall'})];
         this.npc[0].createAnims();
         this.npc[0].activityPoints=3;
@@ -115,7 +115,7 @@ export default class Bout extends Phaser.Scene {
         this.npcSprite.push(this.add.sprite(x,y));
         cartPt = this.isometricToCartesian( new Phaser.Geom.Point(x,y));
         tilePt = this.cartesianToTile(cartPt);
-        this.npcSprite[1].depth = 10000;
+        this.npcSprite[1].setDepth(10000);
         this.npc.push(new Npc({scene: this, sprite: this.npcSprite[1], x:cartPt.x, y:cartPt.y, health: health, enemyType: 'bat'}));
 		this.playfield.add(this.npcSprite[1]);
 		console.log("Bat "+x+","+y+" -> iso "+x+","+y+" -> cart "+cartPt.x+","+cartPt.y+" -> tile "+tilePt.x+","+tilePt.y);
@@ -162,6 +162,12 @@ export default class Bout extends Phaser.Scene {
         this.npc.forEach(npc => {
 			npc.create();
 		});
+	const arrow = '40 0 40 20 100 20 100 80 40 80 40 100 0 50';
+        this.arrowPoly = this.add.polygon(this.player.sprite.x, this.player.sprite.y-45, arrow, 0x00ff00, 0.8);
+	this.arrowPoly.setAngle(-90);
+	this.arrowPoly.setScale(0.25);
+	this.arrowPoly.setDepth(10000);
+	this.playfield.add(this.arrowPoly);
 		this.cameras.main.ignore(this.container);
 		this.UICamera.ignore(this.playfield);
     }
@@ -320,7 +326,7 @@ export default class Bout extends Phaser.Scene {
 				const tile = scene.add.image(centerX + tx, centerY + ty, 'tiles', id);
 				this.playfield.add(tile);
 
-				tile.depth = centerY + ty;
+				tile.setDepth(centerY + ty);
             }
             i++;
           }
@@ -363,12 +369,15 @@ export default class Bout extends Phaser.Scene {
 		// player or enemy calls this when their activity points are used up.
 		console.log("end of turn for "+(this.whoseTurn==-1?"player":"enemy "+this.whoseTurn));
 		this.whoseTurn++;
+		
+		let active = null;
 
 		while(this.whoseTurn>-1 && this.whoseTurn<this.npc.length) {
 			console.log("Testing enemy "+this.whoseTurn+"; is alive?"+this.npc[this.whoseTurn].isAlive());
 			if(this.npc[this.whoseTurn].isAlive()) {
 				this.npc[this.whoseTurn].activityPoints=1;
 				console.log(this.npc[this.whoseTurn].enemyType+" "+this.whoseTurn+" earned an activity point");
+				active = this.npc[this.whoseTurn];
 				break;
 			}
 			this.whoseTurn++;	// Try again
@@ -381,11 +390,19 @@ export default class Bout extends Phaser.Scene {
 			if(this.player.isAlive()) {
 				console.log("Player earned an activity point");
 				this.player.activityPoints=1;
+				active=this.player;
 			}
 			// Could cull dead enemies here.
 		}
 		console.log("Active becomes "+(this.whoseTurn==-1?"player":"enemy "+this.whoseTurn));
-		
+		if(active) {
+			this.arrowPoly.x=active.sprite.x;
+			this.arrowPoly.y=active.sprite.y-45;
+		} else {
+			// Hide!
+			this.arrowPoly.x=-100;
+			this.arrowPoly.y=-100;
+		}
 	}
 
     update ()
